@@ -1,0 +1,85 @@
+{
+  "nav": {
+    "about": "Acerca",
+    "skills": "Habilidades",
+    "services": "Servicios",
+    "projects": "Proyectos",
+    "experience": "Experiencia",
+    "contact": "Contacto",
+    "hireMe": "Contrátame"
+  },
+  "hero": {
+    "available": "Disponible para freelance",
+    "subtitle": "Desarrollador Full-Stack · IA & Automatización · Web & Cloud",
+    "tagline": "Arquitectando experiencias digitales que empujan los límites de la web.",
+    "cta": "Ver Mi Trabajo",
+    "ctaContact": "Trabajemos Juntos",
+    "scroll": "Desplazar",
+    "yearsExp": "Años de Exp.",
+    "projects": "Proyectos",
+    "satisfaction": "Satisfacción",
+    "location": "Colombia"
+  },
+  "about": {
+    "label": "01 / Acerca",
+    "heading1": "Construyendo",
+    "heading2": "experiencias",
+    "heading3": "digitales que importan.",
+    "bio": "Desarrollador Full-Stack con experiencia en aplicaciones web y móviles escalables. Especializado en integración de IA y automatización de procesos. He optimizado plataformas hasta en 45% de rendimiento.",
+    "bio2": "Con 4+ años a lo largo del full stack, me especializo en apps web de alto rendimiento, integraciones de IA y experiencias interactivas inmersivas.",
+    "bio3": "Prospero en la intersección de la precisión de ingeniería y el diseño creativo — donde el código se convierte en arte.",
+    "location": "Ubicación",
+    "status": "Estado",
+    "available": "Disponible para trabajar",
+    "timezone": "Zona Horaria",
+    "github": "GitHub",
+    "coreExpertise": "Competencias Clave",
+    "githubBtn": "Perfil de GitHub",
+    "downloadCV": "Descargar CV"
+  },
+  "skills": {
+    "label": "02 / Habilidades",
+    "heading1": "Expertise",
+    "heading2": "Técnico",
+    "scrollHint": "Desliza para explorar",
+    "technologies": "tecnologías · Siempre aprendiendo"
+  },
+  "projects": {
+    "label": "04 / Proyectos",
+    "heading1": "Trabajo",
+    "heading2": "Selecto",
+    "viewAll": "Ver todo en GitHub",
+    "featured": "Destacado"
+  },
+  "experience": {
+    "label": "05 / Experiencia",
+    "heading1": "Historial",
+    "heading2": "Laboral"
+  },
+  "education": {
+    "label": "06 / Educación",
+    "heading1": "Formación",
+    "heading2": "Académica",
+    "present": "Actualidad"
+  },
+  "contact": {
+    "label": "07 / Contacto",
+    "heading1": "Hablemos",
+    "heading2": "",
+    "description": "Disponible para proyectos freelance, posiciones full-time y colaboraciones técnicas.",
+    "nameLabel": "Nombre completo",
+    "emailLabel": "Correo electrónico",
+    "subjectLabel": "Asunto",
+    "messageLabel": "Mensaje",
+    "send": "Enviar Mensaje",
+    "sending": "Enviando...",
+    "email": "Correo",
+    "phone": "Teléfono",
+    "linkedin": "LinkedIn",
+    "github": "GitHub"
+  },
+  "footer": {
+    "rights": "Todos los derechos reservados.",
+    "builtWith": "Construido con Next.js, Three.js & GSAP"
+  }
+}
