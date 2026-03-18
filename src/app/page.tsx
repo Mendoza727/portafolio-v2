@@ -5,9 +5,9 @@ import { AboutSection } from "@/components/sections/AboutSection";
 import { SkillsSection } from "@/components/sections/SkillsSection";
 import { ServicesSection } from "@/components/sections/ServicesSection";
 import { ProjectsSection } from "@/components/sections/ProjectsSection";
-import { GithubSection } from "@/components/sections/GithubSection";
 import { ExperienceSection } from "@/components/sections/ExperienceSection";
-import { TestimonialsSection } from "@/components/sections/TestimonialsSection";
+import { EducationSection } from "@/components/sections/EducationSection";
+import { GithubSection } from "@/components/sections/GithubSection";
 import { ContactSection } from "@/components/sections/ContactSection";
 
 export default function HomePage() {
@@ -22,9 +22,9 @@ export default function HomePage() {
       <SkillsSection />
       <ServicesSection />
       <ProjectsSection />
-      <GithubSection />
       <ExperienceSection />
-      <TestimonialsSection />
+      <EducationSection />
+      <GithubSection />
       <ContactSection />
 
       {/* Footer */}

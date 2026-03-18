@@ -1,32 +1,43 @@
 "use client";
-import { useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Send, Mail, MapPin, Github, Linkedin, CheckCircle2, AlertCircle } from "lucide-react";
+import { Send, Mail, Phone, Github, Linkedin, CheckCircle2, AlertCircle, MapPin } from "lucide-react";
 import { PERSONAL_INFO, SOCIAL_LINKS } from "@/lib/data";
-import { cn } from "@/lib/utils";
+import { useI18n } from "@/i18n/I18nProvider";
 
 const schema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Please enter a valid email"),
-  subject: z.string().min(5, "Subject must be at least 5 characters"),
-  message: z.string().min(20, "Message must be at least 20 characters"),
+  name: z.string().min(2),
+  email: z.string().email(),
+  subject: z.string().min(5),
+  message: z.string().min(20),
   budget: z.string().optional(),
 });
 
 type FormData = z.infer<typeof schema>;
 
+function InputStyle(hasError: boolean) {
+  return {
+    width: "100%",
+    padding: "0.75rem 1rem",
+    borderRadius: "0.75rem",
+    background: "hsl(var(--surface-2))",
+    color: "white",
+    fontSize: "0.875rem",
+    border: `1px solid ${hasError ? "rgba(248,113,113,0.6)" : "hsl(var(--border))"}`,
+    outline: "none",
+    transition: "border-color 0.2s ease",
+  } as React.CSSProperties;
+}
+
 export function ContactSection() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const { t } = useI18n();
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<FormData>({ resolver: zodResolver(schema) });
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>({
+    resolver: zodResolver(schema),
+  });
 
   const onSubmit = async (data: FormData) => {
     setStatus("loading");
@@ -44,196 +55,304 @@ export function ContactSection() {
     }
   };
 
+  const contactItems = [
+    { icon: Mail, label: t("contact.email"), value: PERSONAL_INFO.email, href: `mailto:${PERSONAL_INFO.email}` },
+    { icon: Phone, label: t("contact.phone"), value: PERSONAL_INFO.phone, href: `tel:${SOCIAL_LINKS.phone}` },
+    { icon: Github, label: "GitHub", value: `@${PERSONAL_INFO.nickname}`, href: SOCIAL_LINKS.github },
+    { icon: Linkedin, label: "LinkedIn", value: `/${PERSONAL_INFO.nickname}`, href: SOCIAL_LINKS.linkedin },
+    { icon: MapPin, label: "Location", value: PERSONAL_INFO.location, href: undefined },
+  ];
+
   return (
-    <section id="contact" className="relative py-28 overflow-hidden" aria-label="Contact section">
-      {/* Background effects */}
-      <div className="absolute inset-0 dot-grid opacity-30" />
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-500/40 to-transparent" />
+    <section
+      id="contact"
+      aria-label="Contact section"
+      style={{
+        position: "relative",
+        paddingTop: "8rem",
+        paddingBottom: "8rem",
+        overflow: "hidden",
+        background: "hsl(var(--bg))",
+      }}
+    >
+      {/* Decorative borders */}
+      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "1px", background: "linear-gradient(to right, transparent, hsl(var(--accent-1) / 0.3), transparent)" }} />
 
-      <div className="section-container">
+      {/* Dot grid */}
+      <div className="absolute inset-0 dot-grid opacity-[0.08] pointer-events-none" />
+
+      {/* Glow orbs */}
+      <div
+        className="bg-orb"
+        data-y="-0.2"
+        style={{
+          position: "absolute",
+          top: "10%",
+          right: "-5%",
+          width: "480px",
+          height: "480px",
+          borderRadius: "50%",
+          background: "radial-gradient(circle, hsl(var(--accent-1) / 0.07) 0%, transparent 70%)",
+          pointerEvents: "none",
+        }}
+      />
+      <div
+        className="bg-orb"
+        data-y="0.1"
+        style={{
+          position: "absolute",
+          bottom: "10%",
+          left: "-5%",
+          width: "320px",
+          height: "320px",
+          borderRadius: "50%",
+          background: "radial-gradient(circle, hsl(var(--accent-2) / 0.06) 0%, transparent 70%)",
+          pointerEvents: "none",
+        }}
+      />
+
+      <div className="section-container" style={{ position: "relative" }}>
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <p className="text-xs uppercase tracking-[0.2em] text-[hsl(var(--text-muted))] mb-3">Let&apos;s collaborate</p>
-          <h2 className="text-3xl sm:text-5xl font-black">
-            Get In <span className="text-gradient">Touch</span>
-          </h2>
-          <p className="text-[hsl(var(--text-muted))] mt-4 max-w-md mx-auto">
-            Have a project in mind? I&apos;d love to hear about it. Let&apos;s build something amazing together.
-          </p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
-          {/* Left info panel */}
-          <motion.aside
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="lg:col-span-2 space-y-8"
+        <div className="mb-20">
+          <div className="section-label mb-5" data-reveal>
+            {t("contact.label")}
+          </div>
+          <div
+            data-title
+            style={{
+              fontSize: "clamp(2.5rem, 7vw, 7.5rem)",
+              fontWeight: 900,
+              letterSpacing: "-0.03em",
+              lineHeight: 1.02,
+              overflow: "hidden",
+            }}
           >
-            <div className="space-y-5">
-              {[
-                { icon: Mail, label: "Email", value: SOCIAL_LINKS.email, href: `mailto:${SOCIAL_LINKS.email}` },
-                { icon: MapPin, label: "Location", value: PERSONAL_INFO.location, href: undefined },
-                { icon: Github, label: "GitHub", value: `@${PERSONAL_INFO.nickname}`, href: SOCIAL_LINKS.github },
-                { icon: Linkedin, label: "LinkedIn", value: `/${PERSONAL_INFO.nickname}`, href: SOCIAL_LINKS.linkedin },
-              ].map(({ icon: Icon, label, value, href }) => (
-                <div key={label} className="flex items-center gap-4">
-                  <div className="w-10 h-10 glass rounded-xl flex items-center justify-center shrink-0">
-                    <Icon size={16} className="text-purple-400" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-[hsl(var(--text-muted))]">{label}</p>
-                    {href ? (
-                      <a href={href} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-white hover:text-gradient transition-all">
-                        {value}
-                      </a>
-                    ) : (
-                      <p className="text-sm font-semibold text-white">{value}</p>
-                    )}
-                  </div>
-                </div>
-              ))}
+            <div className="title-inner">
+              {t("contact.heading1")}
+              <br />
+              <span
+                style={{
+                  background: "linear-gradient(135deg, hsl(var(--accent-1)), hsl(var(--accent-2)))",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
+              >
+                {t("contact.heading2")}
+              </span>
             </div>
+          </div>
+          <p data-reveal style={{ color: "hsl(var(--text-muted))", marginTop: "1.25rem", maxWidth: "32rem", fontSize: "0.95rem", lineHeight: 1.7 }}>
+            {t("contact.description")}
+          </p>
+        </div>
 
-            <div className="glass rounded-2xl p-5">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-16 items-start">
+          {/* Left: Contact info */}
+          <aside className="lg:col-span-2 space-y-4" data-stagger>
+            {contactItems.map(({ icon: Icon, label, value, href }) => (
+              <div
+                key={label}
+                data-item
+                className="flex items-center gap-4"
+                style={{
+                  padding: "1.1rem 1.25rem",
+                  borderRadius: "1rem",
+                  background: "hsl(var(--surface))",
+                  border: "1px solid hsl(var(--border))",
+                  transition: "border-color 0.3s ease",
+                }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderColor = "hsl(var(--accent-1) / 0.3)"; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = "hsl(var(--border))"; }}
+              >
+                <div
+                  style={{
+                    width: "38px",
+                    height: "38px",
+                    borderRadius: "0.6rem",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    background: "hsl(var(--surface-2))",
+                    flexShrink: 0,
+                  }}
+                >
+                  <Icon size={15} style={{ color: "hsl(var(--accent-1))" }} />
+                </div>
+                <div>
+                  <p style={{ fontSize: "0.7rem", color: "hsl(var(--text-muted))", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "0.15rem" }}>
+                    {label}
+                  </p>
+                  {href ? (
+                    <a
+                      href={href}
+                      target={href.startsWith("mailto") || href.startsWith("tel") ? undefined : "_blank"}
+                      rel="noopener noreferrer"
+                      style={{ fontSize: "0.875rem", fontWeight: 600, color: "white", textDecoration: "none", transition: "color 0.2s" }}
+                      onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = "hsl(var(--accent-2))"; }}
+                      onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = "white"; }}
+                    >
+                      {value}
+                    </a>
+                  ) : (
+                    <p style={{ fontSize: "0.875rem", fontWeight: 600, color: "white" }}>{value}</p>
+                  )}
+                </div>
+              </div>
+            ))}
+
+            {/* Availability badge */}
+            <div
+              style={{
+                marginTop: "1.5rem",
+                padding: "1.25rem",
+                borderRadius: "1rem",
+                background: "hsl(var(--surface))",
+                border: "1px solid hsl(160 80% 40% / 0.2)",
+              }}
+            >
               <div className="flex items-center gap-2 mb-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-sm font-semibold text-emerald-400">Available for work</span>
+                <span style={{ fontSize: "0.875rem", fontWeight: 600, color: "#34d399" }}>
+                  {t("about.available")}
+                </span>
               </div>
-              <p className="text-xs text-[hsl(var(--text-muted))] leading-relaxed">
-                Currently accepting freelance projects and exploring full-time opportunities. Typical response time: 24 hours.
+              <p style={{ fontSize: "0.8rem", color: "hsl(var(--text-muted))", lineHeight: 1.6 }}>
+                {t("contact.description")} Typical response: 24h.
               </p>
             </div>
-          </motion.aside>
+          </aside>
 
-          {/* Contact Form */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="lg:col-span-3"
-          >
-            <form onSubmit={handleSubmit(onSubmit)} className="glass rounded-2xl p-8 space-y-5" noValidate>
+          {/* Right: Form */}
+          <div className="lg:col-span-3" data-reveal>
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              noValidate
+              style={{
+                background: "hsl(var(--surface))",
+                border: "1px solid hsl(var(--border))",
+                borderRadius: "1.5rem",
+                padding: "2.5rem",
+                display: "flex",
+                flexDirection: "column",
+                gap: "1.25rem",
+              }}
+            >
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
-                  <label htmlFor="name" className="block text-xs font-semibold text-[hsl(var(--text-muted))] mb-2 uppercase tracking-wider">
-                    Name
+                  <label htmlFor="name" style={{ display: "block", fontSize: "0.7rem", fontWeight: 700, color: "hsl(var(--text-muted))", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: "0.5rem" }}>
+                    {t("contact.nameLabel")}
                   </label>
                   <input
                     id="name"
                     {...register("name")}
-                    placeholder="John Doe"
-                    className={cn(
-                      "w-full px-4 py-3 rounded-xl bg-[hsl(var(--surface-2))] text-white text-sm border border-[hsl(var(--border))] focus:outline-none focus:border-purple-500 placeholder:text-[hsl(var(--text-muted))] transition-colors",
-                      errors.name && "border-red-500/60"
-                    )}
+                    placeholder="Juan Pérez"
+                    style={InputStyle(!!errors.name)}
+                    onFocus={(e) => { e.currentTarget.style.borderColor = "hsl(var(--accent-1) / 0.6)"; }}
+                    onBlur={(e) => { e.currentTarget.style.borderColor = errors.name ? "rgba(248,113,113,0.6)" : "hsl(var(--border))"; }}
                   />
-                  {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name.message}</p>}
+                  {errors.name && <p style={{ color: "#f87171", fontSize: "0.75rem", marginTop: "0.25rem" }}>{errors.name.message}</p>}
                 </div>
                 <div>
-                  <label htmlFor="email" className="block text-xs font-semibold text-[hsl(var(--text-muted))] mb-2 uppercase tracking-wider">
-                    Email
+                  <label htmlFor="email" style={{ display: "block", fontSize: "0.7rem", fontWeight: 700, color: "hsl(var(--text-muted))", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: "0.5rem" }}>
+                    {t("contact.emailLabel")}
                   </label>
                   <input
                     id="email"
                     type="email"
                     {...register("email")}
-                    placeholder="john@example.com"
-                    className={cn(
-                      "w-full px-4 py-3 rounded-xl bg-[hsl(var(--surface-2))] text-white text-sm border border-[hsl(var(--border))] focus:outline-none focus:border-purple-500 placeholder:text-[hsl(var(--text-muted))] transition-colors",
-                      errors.email && "border-red-500/60"
-                    )}
+                    placeholder="juan@empresa.com"
+                    style={InputStyle(!!errors.email)}
+                    onFocus={(e) => { e.currentTarget.style.borderColor = "hsl(var(--accent-1) / 0.6)"; }}
+                    onBlur={(e) => { e.currentTarget.style.borderColor = errors.email ? "rgba(248,113,113,0.6)" : "hsl(var(--border))"; }}
                   />
-                  {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email.message}</p>}
+                  {errors.email && <p style={{ color: "#f87171", fontSize: "0.75rem", marginTop: "0.25rem" }}>{errors.email.message}</p>}
                 </div>
               </div>
 
               <div>
-                <label htmlFor="subject" className="block text-xs font-semibold text-[hsl(var(--text-muted))] mb-2 uppercase tracking-wider">
-                  Subject
+                <label htmlFor="subject" style={{ display: "block", fontSize: "0.7rem", fontWeight: 700, color: "hsl(var(--text-muted))", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: "0.5rem" }}>
+                  {t("contact.subjectLabel")}
                 </label>
                 <input
                   id="subject"
                   {...register("subject")}
-                  placeholder="Project Inquiry"
-                  className={cn(
-                    "w-full px-4 py-3 rounded-xl bg-[hsl(var(--surface-2))] text-white text-sm border border-[hsl(var(--border))] focus:outline-none focus:border-purple-500 placeholder:text-[hsl(var(--text-muted))] transition-colors",
-                    errors.subject && "border-red-500/60"
-                  )}
+                  placeholder="Proyecto Web / Consultoría"
+                  style={InputStyle(!!errors.subject)}
+                  onFocus={(e) => { e.currentTarget.style.borderColor = "hsl(var(--accent-1) / 0.6)"; }}
+                  onBlur={(e) => { e.currentTarget.style.borderColor = errors.subject ? "rgba(248,113,113,0.6)" : "hsl(var(--border))"; }}
                 />
-                {errors.subject && <p className="text-red-400 text-xs mt-1">{errors.subject.message}</p>}
+                {errors.subject && <p style={{ color: "#f87171", fontSize: "0.75rem", marginTop: "0.25rem" }}>{errors.subject.message}</p>}
               </div>
 
               <div>
-                <label htmlFor="budget" className="block text-xs font-semibold text-[hsl(var(--text-muted))] mb-2 uppercase tracking-wider">
-                  Budget (Optional)
+                <label htmlFor="budget" style={{ display: "block", fontSize: "0.7rem", fontWeight: 700, color: "hsl(var(--text-muted))", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: "0.5rem" }}>
+                  Budget (Opcional)
                 </label>
-                <select
-                  id="budget"
-                  {...register("budget")}
-                  className="w-full px-4 py-3 rounded-xl bg-[hsl(var(--surface-2))] text-[hsl(var(--text-subtle))] text-sm border border-[hsl(var(--border))] focus:outline-none focus:border-purple-500 transition-colors"
-                >
-                  <option value="">Select budget range</option>
-                  <option value="< $1k">Less than $1,000</option>
+                <select id="budget" {...register("budget")} style={{ ...InputStyle(false), color: "hsl(var(--text-subtle))" }}>
+                  <option value="">Select / Seleccionar</option>
+                  <option value="<$1k">Less than $1,000</option>
                   <option value="$1k-$5k">$1,000 – $5,000</option>
                   <option value="$5k-$15k">$5,000 – $15,000</option>
                   <option value="$15k+">$15,000+</option>
-                  <option value="discuss">Let&apos;s discuss</option>
+                  <option value="discuss">Hablemos / Let&apos;s discuss</option>
                 </select>
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-xs font-semibold text-[hsl(var(--text-muted))] mb-2 uppercase tracking-wider">
-                  Message
+                <label htmlFor="message" style={{ display: "block", fontSize: "0.7rem", fontWeight: 700, color: "hsl(var(--text-muted))", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: "0.5rem" }}>
+                  {t("contact.messageLabel")}
                 </label>
                 <textarea
                   id="message"
                   {...register("message")}
                   rows={5}
-                  placeholder="Tell me about your project..."
-                  className={cn(
-                    "w-full px-4 py-3 rounded-xl bg-[hsl(var(--surface-2))] text-white text-sm border border-[hsl(var(--border))] focus:outline-none focus:border-purple-500 placeholder:text-[hsl(var(--text-muted))] transition-colors resize-none",
-                    errors.message && "border-red-500/60"
-                  )}
+                  placeholder="Cuéntame sobre tu proyecto..."
+                  style={{ ...InputStyle(!!errors.message), resize: "none" }}
+                  onFocus={(e) => { e.currentTarget.style.borderColor = "hsl(var(--accent-1) / 0.6)"; }}
+                  onBlur={(e) => { e.currentTarget.style.borderColor = errors.message ? "rgba(248,113,113,0.6)" : "hsl(var(--border))"; }}
                 />
-                {errors.message && <p className="text-red-400 text-xs mt-1">{errors.message.message}</p>}
+                {errors.message && <p style={{ color: "#f87171", fontSize: "0.75rem", marginTop: "0.25rem" }}>{errors.message.message}</p>}
               </div>
 
-              {/* Status messages */}
               {status === "success" && (
-                <div className="flex items-center gap-2 text-emerald-400 text-sm glass-subtle rounded-xl p-3">
-                  <CheckCircle2 size={16} />
-                  Message sent! I&apos;ll get back to you within 24 hours.
+                <div className="flex items-center gap-2" style={{ color: "#34d399", fontSize: "0.875rem", background: "hsl(160 80% 40% / 0.08)", border: "1px solid hsl(160 80% 40% / 0.2)", borderRadius: "0.75rem", padding: "0.75rem 1rem" }}>
+                  <CheckCircle2 size={15} />
+                  ¡Mensaje enviado! Te responderé en menos de 24h.
                 </div>
               )}
               {status === "error" && (
-                <div className="flex items-center gap-2 text-red-400 text-sm glass-subtle rounded-xl p-3">
-                  <AlertCircle size={16} />
-                  Something went wrong. Please try again or email me directly.
+                <div className="flex items-center gap-2" style={{ color: "#f87171", fontSize: "0.875rem", background: "rgba(248,113,113,0.08)", border: "1px solid rgba(248,113,113,0.2)", borderRadius: "0.75rem", padding: "0.75rem 1rem" }}>
+                  <AlertCircle size={15} />
+                  Algo salió mal. Escríbeme directamente a {PERSONAL_INFO.email}
                 </div>
               )}
 
               <button
                 type="submit"
                 disabled={status === "loading"}
-                className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold bg-gradient-to-r from-purple-600 to-cyan-500 text-white hover:opacity-90 hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-300"
+                className="w-full flex items-center justify-center gap-2 rounded-xl font-bold text-white transition-all duration-300"
+                style={{
+                  padding: "0.9rem",
+                  background: "linear-gradient(135deg, hsl(var(--accent-1)), hsl(var(--accent-2)))",
+                  boxShadow: "0 0 24px hsl(var(--accent-1) / 0.3)",
+                  opacity: status === "loading" ? 0.65 : 1,
+                  cursor: status === "loading" ? "not-allowed" : "pointer",
+                }}
+                onMouseEnter={(e) => { if (status !== "loading") (e.currentTarget as HTMLElement).style.transform = "scale(1.02)"; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = "scale(1)"; }}
               >
                 {status === "loading" ? (
-                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <div style={{ width: "16px", height: "16px", border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "white", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
                 ) : (
                   <>
-                    <Send size={16} />
-                    Send Message
+                    <Send size={15} />
+                    {t("contact.send")}
                   </>
                 )}
               </button>
             </form>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

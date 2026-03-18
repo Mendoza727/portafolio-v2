@@ -1,8 +1,10 @@
 "use client";
 import { CheckCircle2, Calendar } from "lucide-react";
 import { EXPERIENCES } from "@/lib/data";
+import { useI18n } from "@/i18n/I18nProvider";
 
 export function ExperienceSection() {
+  const { t } = useI18n();
   return (
     <section
       id="experience"
@@ -44,7 +46,7 @@ export function ExperienceSection() {
         {/* Header */}
         <div className="mb-24">
           <div className="section-label mb-6" data-reveal>
-            07 / Experience
+            {t("experience.label")}
           </div>
           <div
             data-title
@@ -53,11 +55,10 @@ export function ExperienceSection() {
               fontWeight: 900,
               letterSpacing: "-0.03em",
               lineHeight: 1.02,
-              overflow: "hidden",
             }}
           >
             <div className="title-inner">
-              Work
+              {t("experience.heading1")}
               <br />
               <span style={{
                 background: "linear-gradient(135deg, hsl(var(--accent-1)), hsl(var(--accent-2)))",
@@ -65,7 +66,7 @@ export function ExperienceSection() {
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
               }}>
-                History
+                {t("experience.heading2")}
               </span>
             </div>
           </div>

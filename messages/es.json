@@ -44,6 +44,11 @@
     "scrollHint": "Desliza para explorar",
     "technologies": "tecnologías · Siempre aprendiendo"
   },
+  "services": {
+    "label": "03 / Servicios",
+    "heading1": "Mis",
+    "heading2": "Servicios"
+  },
   "projects": {
     "label": "04 / Proyectos",
     "heading1": "Trabajo",
@@ -65,7 +70,7 @@
   "contact": {
     "label": "07 / Contacto",
     "heading1": "Hablemos",
-    "heading2": "",
+    "heading2": "Juntos",
     "description": "Disponible para proyectos freelance, posiciones full-time y colaboraciones técnicas.",
     "nameLabel": "Nombre completo",
     "emailLabel": "Correo electrónico",

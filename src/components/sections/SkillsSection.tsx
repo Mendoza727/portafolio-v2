@@ -9,54 +9,54 @@ gsap.registerPlugin(ScrollTrigger);
 
 const CATEGORIES = [
   { key: "frontend", label: "Frontend", color: "#7c3aed", border: "#7c3aed33" },
-  { key: "backend", label: "Backend", color: "#06b6d4", border: "#06b6d433" },
-  { key: "devops", label: "DevOps", color: "#10b981", border: "#10b98133" },
-  { key: "ai", label: "AI / ML", color: "#d946ef", border: "#d946ef33" },
-  { key: "mobile", label: "Mobile", color: "#f59e0b", border: "#f59e0b33" },
-  { key: "tools", label: "Tools", color: "#6366f1", border: "#6366f133" },
+  { key: "backend",  label: "Backend",  color: "#06b6d4", border: "#06b6d433" },
+  { key: "devops",   label: "DevOps",   color: "#10b981", border: "#10b98133" },
+  { key: "ai",       label: "AI / ML",  color: "#d946ef", border: "#d946ef33" },
+  { key: "mobile",   label: "Mobile",   color: "#f59e0b", border: "#f59e0b33" },
+  { key: "tools",    label: "Tools",    color: "#6366f1", border: "#6366f133" },
 ] as const;
-
-type CatKey = (typeof CATEGORIES)[number]["key"];
 
 export function SkillsSection() {
   const { t } = useI18n();
   const sectionRef = useRef<HTMLElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
+  const trackRef   = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const section = sectionRef.current;
-    const track = trackRef.current;
+    const track   = trackRef.current;
     if (!section || !track) return;
 
-    // Wait for layout
     const timer = setTimeout(() => {
       ScrollTrigger.refresh();
 
       const trackWidth = track.scrollWidth;
-      const viewportW = window.innerWidth;
-      const moveX = trackWidth - viewportW + 64; // 64px padding
+      const viewportW  = window.innerWidth;
+      const moveX      = trackWidth - viewportW + 80;
 
-      if (moveX <= 0) return; // no need to scroll on small content
+      if (moveX <= 0) return;
 
-      const st = gsap.to(track, {
-        x: -moveX,
-        ease: "none",
+      // GSAP Timeline for breathing room before scrolling starts:
+      // first 22% of the timeline = held still so user sees all cards
+      // remaining 78% = horizontal movement
+      const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
           pin: true,
+          pinSpacing: true,
           start: "top top",
-          end: () => `+=${moveX}`,
-          scrub: 1.5,
+          // Extra 500px breathing room on top of the movement distance
+          end: () => `+=${moveX + 500}`,
+          scrub: 1.4,
           anticipatePin: 1,
           invalidateOnRefresh: true,
         },
       });
 
-      return () => {
-        if (st.scrollTrigger) st.scrollTrigger.kill();
-        gsap.set(track, { x: 0 });
-      };
-    }, 600);
+      // Pause at start (no movement), then slide cards
+      tl.to({}, { duration: 0.28 }) // ~22% hold = breathing room
+        .to(track, { x: -moveX, ease: "none", duration: 0.72 });
+
+    }, 400);
 
     return () => clearTimeout(timer);
   }, []);
@@ -69,20 +69,16 @@ export function SkillsSection() {
       style={{
         background: "hsl(var(--surface))",
         position: "relative",
-        minHeight: "100vh",
-        overflow: "hidden",
+        overflowX: "hidden",
+        overflowY: "visible",
       }}
     >
-      {/* Top/bottom decorative borders */}
       <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "1px", background: "linear-gradient(to right, transparent, hsl(var(--accent-1) / 0.3), transparent)" }} />
       <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "1px", background: "linear-gradient(to right, transparent, hsl(var(--accent-2) / 0.2), transparent)" }} />
 
-      {/* Header always at top */}
-      <div
-        className="section-container"
-        style={{ paddingTop: "7rem", paddingBottom: "3rem" }}
-      >
-        <div className="section-label mb-5" data-reveal>{t("skills.label")}</div>
+      {/* Header */}
+      <div className="section-container" style={{ paddingTop: "4rem", paddingBottom: "2.5rem" }}>
+        <div className="section-label mb-4" data-reveal>{t("skills.label")}</div>
 
         <div className="flex items-end justify-between gap-4 flex-wrap">
           <div
@@ -92,33 +88,24 @@ export function SkillsSection() {
               fontWeight: 900,
               letterSpacing: "-0.03em",
               lineHeight: 1.02,
-              overflow: "hidden",
             }}
           >
             <div className="title-inner">
               {t("skills.heading1")}
               <br />
-              <span
-                style={{
-                  background: "linear-gradient(135deg, hsl(var(--accent-1)), hsl(var(--accent-2)))",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                }}
-              >
+              <span style={{ background: "linear-gradient(135deg, hsl(var(--accent-1)), hsl(var(--accent-2)))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
                 {t("skills.heading2")}
               </span>
             </div>
           </div>
 
           <div data-reveal style={{ textAlign: "right" }}>
-            <p style={{ color: "hsl(var(--text-muted))", fontSize: "0.875rem", marginBottom: "0.5rem" }}>
+            <p style={{ color: "hsl(var(--text-muted))", fontSize: "0.875rem", marginBottom: "0.4rem" }}>
               {SKILLS.length}+ {t("skills.technologies")}
             </p>
-            {/* Scroll hint arrow */}
             <div className="flex items-center justify-end gap-2" style={{ color: "hsl(var(--text-muted))" }}>
               <span className="text-xs tracking-widest uppercase">{t("skills.scrollHint")}</span>
-              <svg width="28" height="14" viewBox="0 0 28 14" fill="none">
+              <svg width="26" height="12" viewBox="0 0 28 14" fill="none">
                 <path d="M0 7h24M18 1l6 6-6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
@@ -126,17 +113,17 @@ export function SkillsSection() {
         </div>
       </div>
 
-      {/* Horizontal scroll track — full width, no overflow clip on parent */}
+      {/* Horizontal scroll track — alignItems:stretch makes all cards equal height */}
       <div
         ref={trackRef}
         style={{
           display: "flex",
-          alignItems: "stretch",
+          alignItems: "stretch",   /* ← key: all cards same height as tallest */
           gap: "1.25rem",
           paddingLeft: "clamp(1.25rem, 5vw, 5rem)",
           paddingRight: "clamp(1.25rem, 5vw, 5rem)",
-          paddingBottom: "5rem",
-          paddingTop: "1rem",
+          paddingBottom: "4rem",
+          paddingTop: "0.5rem",
           width: "max-content",
           willChange: "transform",
         }}
@@ -150,13 +137,13 @@ export function SkillsSection() {
               key={cat.key}
               style={{
                 flexShrink: 0,
-                width: "clamp(260px, 26vw, 360px)",
-                minHeight: "420px",
+                width: "clamp(260px, 26vw, 340px)",
+                /* NO height: fit-content here → inherits stretch = equal height */
                 background: "hsl(var(--bg))",
                 border: `1px solid ${cat.border}`,
                 borderTop: `3px solid ${cat.color}`,
                 borderRadius: "1.2rem",
-                padding: "1.75rem",
+                padding: "1.5rem",
                 position: "relative",
                 overflow: "hidden",
                 display: "flex",
@@ -171,75 +158,30 @@ export function SkillsSection() {
               }}
             >
               {/* Category header */}
-              <div className="flex items-center gap-3 mb-5">
-                <div
-                  style={{
-                    width: "10px",
-                    height: "10px",
-                    borderRadius: "50%",
-                    background: cat.color,
-                    boxShadow: `0 0 10px ${cat.color}80`,
-                  }}
-                />
-                <span
-                  style={{
-                    fontSize: "0.65rem",
-                    fontWeight: 700,
-                    letterSpacing: "0.25em",
-                    textTransform: "uppercase",
-                    color: cat.color,
-                  }}
-                >
+              <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", marginBottom: "1.25rem" }}>
+                <div style={{ width: "9px", height: "9px", borderRadius: "50%", background: cat.color, boxShadow: `0 0 8px ${cat.color}80`, flexShrink: 0 }} />
+                <span style={{ fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.25em", textTransform: "uppercase", color: cat.color }}>
                   {cat.label}
                 </span>
               </div>
 
-              {/* Skills list */}
-              <div style={{ display: "flex", flexDirection: "column", gap: "1rem", flex: 1 }}>
+              {/* Skills list — flex:1 so it fills remaining height evenly */}
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem", flex: 1 }}>
                 {catSkills.map((skill) => (
                   <div key={skill.name}>
-                    <div className="flex justify-between items-center" style={{ marginBottom: "0.4rem" }}>
-                      <span style={{ fontSize: "0.875rem", fontWeight: 600, color: "hsl(var(--text-subtle))" }}>
-                        {skill.name}
-                      </span>
-                      <span style={{ fontSize: "0.7rem", fontFamily: "JetBrains Mono, monospace", fontWeight: 700, color: cat.color }}>
-                        {skill.level}%
-                      </span>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.35rem" }}>
+                      <span style={{ fontSize: "0.82rem", fontWeight: 600, color: "hsl(var(--text-subtle))" }}>{skill.name}</span>
+                      <span style={{ fontSize: "0.7rem", fontFamily: "JetBrains Mono, monospace", fontWeight: 700, color: cat.color }}>{skill.level}%</span>
                     </div>
-                    <div
-                      style={{
-                        height: "4px",
-                        background: "hsl(var(--surface-2))",
-                        borderRadius: "99px",
-                        overflow: "hidden",
-                      }}
-                    >
-                      <div
-                        style={{
-                          height: "100%",
-                          width: `${skill.level}%`,
-                          borderRadius: "99px",
-                          background: `linear-gradient(to right, ${cat.color}80, ${cat.color})`,
-                        }}
-                      />
+                    <div style={{ height: "3px", background: "hsl(var(--surface-2))", borderRadius: "99px", overflow: "hidden" }}>
+                      <div style={{ height: "100%", width: `${skill.level}%`, borderRadius: "99px", background: `linear-gradient(to right, ${cat.color}70, ${cat.color})` }} />
                     </div>
                   </div>
                 ))}
               </div>
 
-              {/* Decorative glow bottom-right */}
-              <div
-                style={{
-                  position: "absolute",
-                  bottom: "-30px",
-                  right: "-30px",
-                  width: "120px",
-                  height: "120px",
-                  borderRadius: "50%",
-                  background: `radial-gradient(circle, ${cat.color}15 0%, transparent 70%)`,
-                  pointerEvents: "none",
-                }}
-              />
+              {/* Decorative glow */}
+              <div style={{ position: "absolute", bottom: "-30px", right: "-30px", width: "110px", height: "110px", borderRadius: "50%", background: `radial-gradient(circle, ${cat.color}15 0%, transparent 70%)`, pointerEvents: "none" }} />
             </div>
           );
         })}

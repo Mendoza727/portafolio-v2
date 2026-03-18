@@ -4,6 +4,7 @@ import { LenisProvider } from "@/components/animations/LenisProvider";
 import { CustomCursor } from "@/components/animations/CustomCursor";
 import { ScrollAnimations } from "@/components/animations/ScrollAnimations";
 import { I18nProvider } from "@/i18n/I18nProvider";
+import { FloatingActionButton } from "@/components/ui/FloatingActionButton";
 import { PERSONAL_INFO, SOCIAL_LINKS } from "@/lib/data";
 import "@/styles/globals.css";
 
@@ -108,6 +109,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               {/* Page content */}
               <main>{children}</main>
             </LenisProvider>
+            <FloatingActionButton />
           </I18nProvider>
         </ThemeProvider>
       </body>

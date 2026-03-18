@@ -38,7 +38,7 @@ export const PERSONAL_INFO = {
 // ─── Social Links ─────────────────────────────────────────────────────────────
 export const SOCIAL_LINKS = {
   github: "https://github.com/Mendoza727",
-  linkedin: "https://linkedin.com/in/mendoza727",
+  linkedin: "https://www.linkedin.com/in/juancamilomendoza-dev/",
   twitter: "https://twitter.com/mendoza727",
   email: "juancamilomendozavillegas14@gmail.com",
   phone: "+573014798364",

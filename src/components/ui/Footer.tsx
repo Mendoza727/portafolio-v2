@@ -1,44 +1,109 @@
+"use client";
 import Link from "next/link";
-import { Github, Linkedin, Twitter, Mail, Code2, ArrowUpRight } from "lucide-react";
-import { SOCIAL_LINKS, NAV_ITEMS, PERSONAL_INFO } from "@/lib/data";
+import { Github, Linkedin, Mail, Code2, Phone } from "lucide-react";
+import { SOCIAL_LINKS, PERSONAL_INFO } from "@/lib/data";
+import { useI18n } from "@/i18n/I18nProvider";
 
 export function Footer() {
   const year = new Date().getFullYear();
+  const { t } = useI18n();
+
+  const navLinks = [
+    { label: t("nav.about"), href: "#about" },
+    { label: t("nav.skills"), href: "#skills" },
+    { label: t("nav.services"), href: "#services" },
+    { label: t("nav.projects"), href: "#projects" },
+    { label: t("nav.experience"), href: "#experience" },
+    { label: t("nav.contact"), href: "#contact" },
+  ];
 
   return (
-    <footer className="relative border-t border-[hsl(var(--border))] bg-[hsl(var(--surface))]">
-      {/* Top fade */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent" />
+    <footer
+      style={{
+        position: "relative",
+        background: "hsl(var(--surface))",
+        borderTop: "1px solid hsl(var(--border))",
+      }}
+    >
+      {/* Top gradient line */}
+      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "1px", background: "linear-gradient(to right, transparent, hsl(var(--accent-1) / 0.5), transparent)" }} />
 
-      <div className="section-container py-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
+      <div className="section-container" style={{ paddingTop: "4rem", paddingBottom: "4rem" }}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+
           {/* Brand */}
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-purple-500 to-cyan-400 flex items-center justify-center">
-                <Code2 size={18} className="text-white" />
+              <div
+                style={{
+                  width: "36px",
+                  height: "36px",
+                  borderRadius: "0.75rem",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: "linear-gradient(135deg, hsl(var(--accent-1)), hsl(var(--accent-2)))",
+                }}
+              >
+                <Code2 size={16} style={{ color: "white" }} />
               </div>
-              <span className="font-bold text-lg text-gradient">{PERSONAL_INFO.nickname}</span>
+              <span
+                style={{
+                  fontWeight: 800,
+                  fontSize: "1.05rem",
+                  background: "linear-gradient(135deg, hsl(var(--accent-1)), hsl(var(--accent-2)))",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
+              >
+                {PERSONAL_INFO.nickname}
+              </span>
             </div>
-            <p className="text-sm text-[hsl(var(--text-muted))] leading-relaxed max-w-xs">
-              {PERSONAL_INFO.tagline}
+            <p style={{ fontSize: "0.85rem", color: "hsl(var(--text-muted))", lineHeight: 1.7, maxWidth: "22rem", marginBottom: "1.5rem" }}>
+              {t("hero.tagline")}
             </p>
-            <div className="flex gap-4 mt-6">
+
+            {/* Social links */}
+            <div className="flex gap-3">
               {[
                 { href: SOCIAL_LINKS.github, icon: Github, label: "GitHub" },
                 { href: SOCIAL_LINKS.linkedin, icon: Linkedin, label: "LinkedIn" },
-                { href: SOCIAL_LINKS.twitter, icon: Twitter, label: "Twitter" },
                 { href: `mailto:${SOCIAL_LINKS.email}`, icon: Mail, label: "Email" },
+                { href: `tel:${SOCIAL_LINKS.phone}`, icon: Phone, label: "Phone" },
               ].map(({ href, icon: Icon, label }) => (
                 <a
                   key={label}
                   href={href}
-                  target={href.startsWith("mailto") ? undefined : "_blank"}
+                  target={href.startsWith("mailto") || href.startsWith("tel") ? undefined : "_blank"}
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="w-9 h-9 glass rounded-xl flex items-center justify-center text-[hsl(var(--text-muted))] hover:text-white hover:border-purple-500/50 transition-all group"
+                  style={{
+                    width: "36px",
+                    height: "36px",
+                    borderRadius: "0.6rem",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    background: "hsl(var(--surface-2))",
+                    border: "1px solid hsl(var(--border))",
+                    color: "hsl(var(--text-muted))",
+                    transition: "all 0.25s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    const el = e.currentTarget as HTMLElement;
+                    el.style.color = "white";
+                    el.style.borderColor = "hsl(var(--accent-1) / 0.4)";
+                    el.style.boxShadow = "0 0 12px hsl(var(--accent-1) / 0.15)";
+                  }}
+                  onMouseLeave={(e) => {
+                    const el = e.currentTarget as HTMLElement;
+                    el.style.color = "hsl(var(--text-muted))";
+                    el.style.borderColor = "hsl(var(--border))";
+                    el.style.boxShadow = "none";
+                  }}
                 >
-                  <Icon size={16} className="group-hover:scale-110 transition-transform" />
+                  <Icon size={15} />
                 </a>
               ))}
             </div>
@@ -46,13 +111,17 @@ export function Footer() {
 
           {/* Navigation */}
           <div>
-            <h3 className="text-sm font-semibold text-white mb-4">Navigation</h3>
-            <ul className="space-y-3">
-              {NAV_ITEMS.map((item) => (
+            <h3 style={{ fontSize: "0.8rem", fontWeight: 700, color: "white", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: "1.25rem" }}>
+              Navigation
+            </h3>
+            <ul style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+              {navLinks.map((item) => (
                 <li key={item.href}>
                   <a
                     href={item.href}
-                    className="text-sm text-[hsl(var(--text-muted))] hover:text-white transition-colors link-underline"
+                    style={{ fontSize: "0.875rem", color: "hsl(var(--text-muted))", textDecoration: "none", transition: "color 0.2s" }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = "white"; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = "hsl(var(--text-muted))"; }}
                   >
                     {item.label}
                   </a>
@@ -63,35 +132,80 @@ export function Footer() {
 
           {/* Contact CTA */}
           <div>
-            <h3 className="text-sm font-semibold text-white mb-4">Let&apos;s Work Together</h3>
-            <p className="text-sm text-[hsl(var(--text-muted))] mb-6 leading-relaxed">
-              Available for freelance projects and full-time opportunities.
+            <h3 style={{ fontSize: "0.8rem", fontWeight: 700, color: "white", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: "1.25rem" }}>
+              {t("nav.hireMe")}
+            </h3>
+            <p style={{ fontSize: "0.875rem", color: "hsl(var(--text-muted))", marginBottom: "1.5rem", lineHeight: 1.7 }}>
+              {t("contact.description")}
             </p>
             <a
               href={`mailto:${SOCIAL_LINKS.email}`}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold bg-gradient-to-r from-purple-600 to-cyan-500 text-white hover:opacity-90 transition-all group"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                padding: "0.6rem 1.25rem",
+                borderRadius: "99px",
+                fontSize: "0.875rem",
+                fontWeight: 700,
+                color: "white",
+                background: "linear-gradient(135deg, hsl(var(--accent-1)), hsl(var(--accent-2)))",
+                boxShadow: "0 0 20px hsl(var(--accent-1) / 0.25)",
+                textDecoration: "none",
+                transition: "opacity 0.2s",
+              }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = "0.87"; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = "1"; }}
             >
-              <Mail size={15} />
-              Get in touch
-              <ArrowUpRight size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              <Mail size={14} />
+              {t("contact.email")}
+            </a>
+
+            {/* Download CV */}
+            <a
+              href="/CV_Juan_Camilo_Mendoza_2026.pdf"
+              download
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                padding: "0.6rem 1.25rem",
+                borderRadius: "99px",
+                fontSize: "0.875rem",
+                fontWeight: 700,
+                color: "white",
+                background: "hsl(var(--surface-2))",
+                border: "1px solid hsl(var(--border))",
+                textDecoration: "none",
+                transition: "border-color 0.2s",
+                marginTop: "0.75rem",
+              }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderColor = "hsl(var(--accent-1) / 0.4)"; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = "hsl(var(--border))"; }}
+            >
+              ↓ {t("about.downloadCV")}
             </a>
           </div>
         </div>
 
-        <div className="border-t border-[hsl(var(--border))] pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-[hsl(var(--text-muted))]">
-            © {year} {PERSONAL_INFO.name}. Crafted with passion & Next.js.
+        {/* Bottom bar */}
+        <div
+          style={{
+            borderTop: "1px solid hsl(var(--border))",
+            paddingTop: "2rem",
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.5rem",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+          className="sm:flex-row"
+        >
+          <p style={{ fontSize: "0.75rem", color: "hsl(var(--text-muted))" }}>
+            © {year} {PERSONAL_INFO.name}. {t("footer.rights")}
           </p>
-          <p className="text-xs text-[hsl(var(--text-muted))]">
-            Designed & Developed by{" "}
-            <a
-              href={SOCIAL_LINKS.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-purple-400 hover:text-purple-300 transition-colors"
-            >
-              {PERSONAL_INFO.nickname}
-            </a>
+          <p style={{ fontSize: "0.75rem", color: "hsl(var(--text-muted))" }}>
+            {t("footer.builtWith")}
           </p>
         </div>
       </div>

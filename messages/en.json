@@ -44,6 +44,11 @@
     "scrollHint": "Scroll to explore",
     "technologies": "technologies · Always learning"
   },
+  "services": {
+    "label": "03 / Services",
+    "heading1": "What I",
+    "heading2": "Offer"
+  },
   "projects": {
     "label": "04 / Projects",
     "heading1": "Selected",

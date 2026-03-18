@@ -3,78 +3,142 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Globe, Sparkles, Brain, Smartphone, Server, ChevronDown } from "lucide-react";
 import { SERVICES } from "@/lib/data";
-import { cn } from "@/lib/utils";
+import { useI18n } from "@/i18n/I18nProvider";
 
 const ICON_MAP: Record<string, React.ElementType> = {
   Globe, Sparkles, Brain, Smartphone, Server,
 };
 
+const ACCENT_COLORS = ["#7c3aed", "#06b6d4", "#10b981", "#d946ef", "#f59e0b"];
+
 export function ServicesSection() {
   const [openId, setOpenId] = useState<string | null>(SERVICES[0].id);
+  const { t } = useI18n();
 
   return (
-    <section id="services" className="relative py-28 overflow-hidden" aria-label="Services section">
-      {/* Glow */}
-      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-72 h-72 rounded-full bg-purple-900/20 blur-3xl pointer-events-none" />
+    <section
+      id="services"
+      aria-label="Services section"
+      style={{
+        position: "relative",
+        paddingTop: "8rem",
+        paddingBottom: "8rem",
+        overflow: "hidden",
+        background: "hsl(var(--bg))",
+      }}
+    >
+      {/* Border top */}
+      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "1px", background: "linear-gradient(to right, transparent, hsl(var(--accent-1) / 0.3), transparent)" }} />
 
-      <div className="section-container">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="text-center mb-16"
+      {/* Left glow orb */}
+      <div
+        className="bg-orb"
+        data-y="0.15"
+        style={{
+          position: "absolute",
+          left: "-5%",
+          top: "50%",
+          transform: "translateY(-50%)",
+          width: "360px",
+          height: "360px",
+          borderRadius: "50%",
+          background: "radial-gradient(circle, hsl(var(--accent-1) / 0.07) 0%, transparent 70%)",
+          pointerEvents: "none",
+        }}
+      />
+
+      <div className="section-container" style={{ position: "relative" }}>
+        {/* Header */}
+        <div className="mb-20" data-reveal>
+          <div className="section-label mb-5">{t("services.label")}</div>
+          <div
+            data-title
+            style={{
+              fontSize: "clamp(2.5rem, 6.5vw, 6.5rem)",
+              fontWeight: 900,
+              letterSpacing: "-0.03em",
+              lineHeight: 1.02,
+            }}
+          >
+            <div className="title-inner">
+              {t("services.heading1")}&nbsp;
+              <span
+                style={{
+                  background: "linear-gradient(135deg, hsl(var(--accent-1)), hsl(var(--accent-2)))",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
+              >
+                {t("services.heading2")}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div
+          style={{ maxWidth: "52rem", margin: "0 auto" }}
+          data-stagger
         >
-          <p className="text-xs uppercase tracking-[0.2em] text-[hsl(var(--text-muted))] mb-3">What I offer</p>
-          <h2 className="text-3xl sm:text-5xl font-black">
-            My <span className="text-gradient">Services</span>
-          </h2>
-        </motion.div>
-
-        <div className="max-w-3xl mx-auto divide-y divide-[hsl(var(--border))]">
           {SERVICES.map((service, i) => {
             const Icon = ICON_MAP[service.icon] ?? Globe;
             const isOpen = openId === service.id;
+            const color = ACCENT_COLORS[i] ?? "#7c3aed";
 
             return (
-              <motion.div
+              <div
                 key={service.id}
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1, duration: 0.5 }}
+                data-item
+                style={{
+                  borderBottom: "1px solid hsl(var(--border))",
+                }}
               >
                 <button
                   onClick={() => setOpenId(isOpen ? null : service.id)}
-                  className="w-full flex items-center justify-between py-6 text-left group"
+                  className="w-full flex items-center justify-between text-left group"
+                  style={{ padding: "1.5rem 0" }}
                   aria-expanded={isOpen}
                 >
                   <div className="flex items-center gap-4">
                     <div
-                      className={cn(
-                        "w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300",
-                        isOpen
-                          ? "bg-gradient-to-br from-purple-500 to-cyan-400 text-white"
-                          : "glass text-[hsl(var(--text-muted))] group-hover:text-white"
-                      )}
+                      style={{
+                        width: "42px",
+                        height: "42px",
+                        borderRadius: "0.75rem",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        background: isOpen
+                          ? `linear-gradient(135deg, ${color}cc, ${color}88)`
+                          : "hsl(var(--surface))",
+                        border: `1px solid ${isOpen ? color + "44" : "hsl(var(--border))"}`,
+                        color: isOpen ? "white" : "hsl(var(--text-muted))",
+                        transition: "all 0.3s ease",
+                        flexShrink: 0,
+                      }}
                     >
-                      <Icon size={18} />
+                      <Icon size={17} />
                     </div>
                     <h3
-                      className={cn(
-                        "font-bold text-lg transition-colors",
-                        isOpen ? "text-gradient" : "text-[hsl(var(--text-subtle))] group-hover:text-white"
-                      )}
+                      style={{
+                        fontWeight: 700,
+                        fontSize: "1.05rem",
+                        color: isOpen ? "white" : "hsl(var(--text-subtle))",
+                        transition: "color 0.3s ease",
+                      }}
                     >
                       {service.title}
                     </h3>
                   </div>
+
                   <ChevronDown
-                    size={20}
-                    className={cn(
-                      "text-[hsl(var(--text-muted))] transition-transform duration-300",
-                      isOpen && "rotate-180 text-purple-400"
-                    )}
+                    size={18}
+                    style={{
+                      color: isOpen ? color : "hsl(var(--text-muted))",
+                      transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+                      transition: "all 0.3s ease",
+                      flexShrink: 0,
+                    }}
                   />
                 </button>
 
@@ -84,15 +148,26 @@ export function ServicesSection() {
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.35, ease: "easeInOut" }}
-                      className="overflow-hidden"
+                      transition={{ duration: 0.32, ease: "easeInOut" }}
+                      style={{ overflow: "hidden" }}
                     >
-                      <div className="pb-6 pl-14">
-                        <p className="text-[hsl(var(--text-muted))] mb-4">{service.description}</p>
+                      <div style={{ paddingBottom: "1.5rem", paddingLeft: "3.5rem" }}>
+                        <p style={{ color: "hsl(var(--text-muted))", fontSize: "0.9rem", lineHeight: 1.7, marginBottom: "1rem" }}>
+                          {service.description}
+                        </p>
                         <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                           {service.features.map((f) => (
-                            <li key={f} className="flex items-center gap-2 text-sm text-[hsl(var(--text-subtle))]">
-                              <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-purple-400 to-cyan-400 flex-shrink-0" />
+                            <li key={f} className="flex items-center gap-2" style={{ fontSize: "0.85rem", color: "hsl(var(--text-subtle))" }}>
+                              <span
+                                style={{
+                                  width: "6px",
+                                  height: "6px",
+                                  borderRadius: "50%",
+                                  background: color,
+                                  flexShrink: 0,
+                                  boxShadow: `0 0 8px ${color}80`,
+                                }}
+                              />
                               {f}
                             </li>
                           ))}
@@ -101,7 +176,7 @@ export function ServicesSection() {
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </motion.div>
+              </div>
             );
           })}
         </div>
