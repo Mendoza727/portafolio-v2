@@ -25,7 +25,7 @@ export function AboutSection() {
     <section
       id="about"
       ref={sectionRef}
-      className="relative py-40 overflow-hidden"
+      className="relative py-20 overflow-hidden"
       aria-label="About section"
       style={{ background: "hsl(var(--bg))" }}
     >

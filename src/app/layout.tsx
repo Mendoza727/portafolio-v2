@@ -16,16 +16,19 @@ export const metadata: Metadata = {
   },
   description: PERSONAL_INFO.tagline,
   keywords: [
-    "fullstack engineer",
+    "fullstack developer colombia",
+    "desarrollador web colombia",
     "software engineer",
-    "web developer",
     "Next.js developer",
     "React developer",
     "Three.js",
-    "México",
-    "freelance developer",
+    "freelance developer colombia",
     "interactive web experiences",
     "AI integration",
+    "Juan Camilo Mendoza",
+    "Mendoza727",
+    "automatizacion n8n",
+    "flutter developer",
   ],
   authors: [{ name: PERSONAL_INFO.name }],
   creator: PERSONAL_INFO.name,
@@ -57,8 +60,12 @@ export const metadata: Metadata = {
   },
 
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico" },
+    ],
     apple: "/apple-touch-icon.png",
+    shortcut: "/favicon.svg",
   },
 
   manifest: "/manifest.json",

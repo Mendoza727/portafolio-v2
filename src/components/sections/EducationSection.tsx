@@ -1,14 +1,48 @@
 "use client";
+import { useEffect, useRef } from "react";
 import { GraduationCap, Calendar } from "lucide-react";
 import { EDUCATION } from "@/lib/data";
 import { useI18n } from "@/i18n/I18nProvider";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export function EducationSection() {
   const { t } = useI18n();
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Cards slide-up + fade in staggered
+      gsap.utils.toArray<HTMLElement>(".edu-card").forEach((card, i) => {
+        gsap.fromTo(
+          card,
+          { opacity: 0, y: 60, scale: 0.94 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.7,
+            delay: i * 0.14,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: card,
+              start: "top 88%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
     <section
       id="education"
+      ref={sectionRef}
       aria-label="Education section"
       style={{
         position: "relative",
@@ -23,9 +57,6 @@ export function EducationSection() {
 
       {/* Glow orb */}
       <div
-        className="bg-orb"
-        data-y="-0.2"
-        data-x="-0.05"
         style={{
           position: "absolute",
           top: "20%",
@@ -51,7 +82,6 @@ export function EducationSection() {
               fontWeight: 900,
               letterSpacing: "-0.03em",
               lineHeight: 1.02,
-              overflow: "hidden",
             }}
           >
             <div className="title-inner">
@@ -72,15 +102,11 @@ export function EducationSection() {
         </div>
 
         {/* Cards */}
-        <div
-          className="grid grid-cols-1 md:grid-cols-3 gap-5"
-          data-stagger
-        >
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {EDUCATION.map((edu, i) => (
             <div
               key={edu.id}
-              data-item
-              className="project-card"
+              className="edu-card"
               style={{
                 background: "hsl(var(--surface))",
                 border: "1px solid hsl(var(--border))",
@@ -88,17 +114,19 @@ export function EducationSection() {
                 padding: "2rem",
                 position: "relative",
                 overflow: "hidden",
-                transition: "border-color 0.3s ease, box-shadow 0.3s ease",
+                transition: "border-color 0.3s ease, box-shadow 0.3s ease, transform 0.35s ease",
               }}
               onMouseEnter={(e) => {
                 const el = e.currentTarget as HTMLElement;
                 el.style.borderColor = "hsl(var(--accent-1) / 0.3)";
                 el.style.boxShadow = "0 0 40px hsl(var(--accent-1) / 0.06)";
+                el.style.transform = "translateY(-6px)";
               }}
               onMouseLeave={(e) => {
                 const el = e.currentTarget as HTMLElement;
                 el.style.borderColor = "hsl(var(--border))";
                 el.style.boxShadow = "none";
+                el.style.transform = "none";
               }}
             >
               {/* Accent top line */}
@@ -106,7 +134,7 @@ export function EducationSection() {
                 style={{
                   position: "absolute",
                   top: 0, left: 0, right: 0,
-                  height: "2px",
+                  height: "3px",
                   background: i === 0
                     ? "linear-gradient(to right, hsl(var(--accent-1)), hsl(var(--accent-2)))"
                     : i === 1
@@ -140,6 +168,7 @@ export function EducationSection() {
                       border: "1px solid hsl(var(--accent-1) / 0.2)",
                       color: "hsl(var(--accent-1))",
                       marginLeft: "auto",
+                      animation: "pulse 2s ease-in-out infinite",
                     }}
                   >
                     {t("education.present")}

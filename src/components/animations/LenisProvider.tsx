@@ -18,7 +18,7 @@ export function LenisProvider({ children }: LenisProviderProps) {
       lerp: 0.08,
       smoothWheel: true,
       syncTouch: false,
-      touchInertiaMultiplier: 35,
+      touchMultiplier: 35,
     });
 
     lenisRef.current = lenis;

@@ -138,53 +138,54 @@ export function Footer() {
             <p style={{ fontSize: "0.875rem", color: "hsl(var(--text-muted))", marginBottom: "1.5rem", lineHeight: 1.7 }}>
               {t("contact.description")}
             </p>
-            <a
-              href={`mailto:${SOCIAL_LINKS.email}`}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.5rem",
-                padding: "0.6rem 1.25rem",
-                borderRadius: "99px",
-                fontSize: "0.875rem",
-                fontWeight: 700,
-                color: "white",
-                background: "linear-gradient(135deg, hsl(var(--accent-1)), hsl(var(--accent-2)))",
-                boxShadow: "0 0 20px hsl(var(--accent-1) / 0.25)",
-                textDecoration: "none",
-                transition: "opacity 0.2s",
-              }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = "0.87"; }}
-              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = "1"; }}
-            >
-              <Mail size={14} />
-              {t("contact.email")}
-            </a>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+              <a
+                href={`mailto:${SOCIAL_LINKS.email}`}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                  padding: "0.6rem 1.25rem",
+                  borderRadius: "99px",
+                  fontSize: "0.875rem",
+                  fontWeight: 700,
+                  color: "white",
+                  background: "linear-gradient(135deg, hsl(var(--accent-1)), hsl(var(--accent-2)))",
+                  boxShadow: "0 0 20px hsl(var(--accent-1) / 0.25)",
+                  textDecoration: "none",
+                  transition: "opacity 0.2s",
+                }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = "0.87"; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = "1"; }}
+              >
+                <Mail size={14} />
+                {t("contact.email")}
+              </a>
 
-            {/* Download CV */}
-            <a
-              href="/CV_Juan_Camilo_Mendoza_2026.pdf"
-              download
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.5rem",
-                padding: "0.6rem 1.25rem",
-                borderRadius: "99px",
-                fontSize: "0.875rem",
-                fontWeight: 700,
-                color: "white",
-                background: "hsl(var(--surface-2))",
-                border: "1px solid hsl(var(--border))",
-                textDecoration: "none",
-                transition: "border-color 0.2s",
-                marginTop: "0.75rem",
-              }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderColor = "hsl(var(--accent-1) / 0.4)"; }}
-              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = "hsl(var(--border))"; }}
-            >
-              ↓ {t("about.downloadCV")}
-            </a>
+              {/* Download CV */}
+              <a
+                href="/CV_Juan_Camilo_Mendoza_2026.pdf"
+                download
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                  padding: "0.6rem 1.25rem",
+                  borderRadius: "99px",
+                  fontSize: "0.875rem",
+                  fontWeight: 700,
+                  color: "white",
+                  background: "hsl(var(--surface-2))",
+                  border: "1px solid hsl(var(--border))",
+                  textDecoration: "none",
+                  transition: "border-color 0.2s",
+                }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderColor = "hsl(var(--accent-1) / 0.4)"; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = "hsl(var(--border))"; }}
+              >
+                ↓ {t("about.downloadCV")}
+              </a>
+            </div>
           </div>
         </div>
 

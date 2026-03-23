@@ -1,18 +1,25 @@
 "use client";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Globe, Sparkles, Brain, Smartphone, Server, ChevronDown } from "lucide-react";
-import { SERVICES } from "@/lib/data";
+import { Globe, Sparkles, Brain, Smartphone, Server, ChevronDown, type LucideIcon } from "lucide-react";
 import { useI18n } from "@/i18n/I18nProvider";
 
-const ICON_MAP: Record<string, React.ElementType> = {
+const ICON_MAP: Record<string, LucideIcon> = {
   Globe, Sparkles, Brain, Smartphone, Server,
 };
 
 const ACCENT_COLORS = ["#7c3aed", "#06b6d4", "#10b981", "#d946ef", "#f59e0b"];
 
+const SERVICE_KEYS = [
+  { id: "1", icon: "Globe",      titleKey: "services.s1title", descKey: "services.s1desc", featureKeys: ["services.s1f1","services.s1f2","services.s1f3","services.s1f4"] },
+  { id: "2", icon: "Brain",      titleKey: "services.s2title", descKey: "services.s2desc", featureKeys: ["services.s2f1","services.s2f2","services.s2f3","services.s2f4"] },
+  { id: "3", icon: "Sparkles",   titleKey: "services.s3title", descKey: "services.s3desc", featureKeys: ["services.s3f1","services.s3f2","services.s3f3","services.s3f4"] },
+  { id: "4", icon: "Smartphone", titleKey: "services.s4title", descKey: "services.s4desc", featureKeys: ["services.s4f1","services.s4f2","services.s4f3","services.s4f4"] },
+  { id: "5", icon: "Server",     titleKey: "services.s5title", descKey: "services.s5desc", featureKeys: ["services.s5f1","services.s5f2","services.s5f3","services.s5f4"] },
+];
+
 export function ServicesSection() {
-  const [openId, setOpenId] = useState<string | null>(SERVICES[0].id);
+  const [openId, setOpenId] = useState<string | null>(SERVICE_KEYS[0].id);
   const { t } = useI18n();
 
   return (
@@ -80,7 +87,7 @@ export function ServicesSection() {
           style={{ maxWidth: "52rem", margin: "0 auto" }}
           data-stagger
         >
-          {SERVICES.map((service, i) => {
+          {SERVICE_KEYS.map((service, i) => {
             const Icon = ICON_MAP[service.icon] ?? Globe;
             const isOpen = openId === service.id;
             const color = ACCENT_COLORS[i] ?? "#7c3aed";
@@ -127,7 +134,7 @@ export function ServicesSection() {
                         transition: "color 0.3s ease",
                       }}
                     >
-                      {service.title}
+                      {t(service.titleKey as any)}
                     </h3>
                   </div>
 
@@ -153,11 +160,11 @@ export function ServicesSection() {
                     >
                       <div style={{ paddingBottom: "1.5rem", paddingLeft: "3.5rem" }}>
                         <p style={{ color: "hsl(var(--text-muted))", fontSize: "0.9rem", lineHeight: 1.7, marginBottom: "1rem" }}>
-                          {service.description}
+                          {t(service.descKey as any)}
                         </p>
                         <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                          {service.features.map((f) => (
-                            <li key={f} className="flex items-center gap-2" style={{ fontSize: "0.85rem", color: "hsl(var(--text-subtle))" }}>
+                          {service.featureKeys.map((fk) => (
+                            <li key={fk} className="flex items-center gap-2" style={{ fontSize: "0.85rem", color: "hsl(var(--text-subtle))" }}>
                               <span
                                 style={{
                                   width: "6px",
@@ -168,7 +175,7 @@ export function ServicesSection() {
                                   boxShadow: `0 0 8px ${color}80`,
                                 }}
                               />
-                              {f}
+                              {t(fk as any)}
                             </li>
                           ))}
                         </ul>

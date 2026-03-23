@@ -40,7 +40,7 @@ export function Navigation() {
         id="main-nav"
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
         style={{
-          padding: scrolled ? "0.75rem 0" : "1.5rem 0",
+          padding: scrolled ? "0.85rem 0" : "2rem 0",
           background: scrolled ? "hsl(235 22% 8% / 0.9)" : "transparent",
           backdropFilter: scrolled ? "blur(24px)" : "none",
           borderBottom: scrolled ? "1px solid hsl(235 15% 16% / 0.5)" : "none",
@@ -51,10 +51,10 @@ export function Navigation() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 group" aria-label="Home">
             <div
-              className="w-9 h-9 rounded-xl flex items-center justify-center"
+              className="w-11 h-11 rounded-xl flex items-center justify-center"
               style={{ background: "linear-gradient(135deg, hsl(var(--accent-1)), hsl(var(--accent-2)))" }}
             >
-              <Code2 size={17} className="text-white" />
+              <Code2 size={20} className="text-white" />
             </div>
             <span
               className="font-bold text-lg hidden sm:block"

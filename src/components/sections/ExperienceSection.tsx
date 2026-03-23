@@ -1,53 +1,121 @@
 "use client";
-import { CheckCircle2, Calendar } from "lucide-react";
+import { useEffect, useRef } from "react";
 import { EXPERIENCES } from "@/lib/data";
 import { useI18n } from "@/i18n/I18nProvider";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
+const ACCENT_COLORS = ["#7c3aed", "#06b6d4", "#10b981", "#d946ef", "#f59e0b"];
+
+// Map index → i18n key prefix
+const EXP_KEYS = ["e1", "e2", "e3", "e4", "e5"];
+// Achievement counts per job
+const ACHIEVEMENT_COUNTS = [4, 5, 4, 3, 4];
 
 export function ExperienceSection() {
   const { t } = useI18n();
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Animate each card from alternating sides with 3D perspective
+      gsap.utils.toArray<HTMLElement>(".exp-card").forEach((card, i) => {
+        const isLeft = i % 2 === 0;
+        gsap.fromTo(
+          card,
+          {
+            opacity: 0,
+            x: isLeft ? -80 : 80,
+            rotateY: isLeft ? -18 : 18,
+            scale: 0.92,
+          },
+          {
+            opacity: 1,
+            x: 0,
+            rotateY: 0,
+            scale: 1,
+            duration: 0.9,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: card,
+              start: "top 85%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      });
+
+      // Animate timeline line fill
+      gsap.fromTo(
+        ".exp-timeline-fill",
+        { scaleY: 0 },
+        {
+          scaleY: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 60%",
+            end: "bottom 40%",
+            scrub: true,
+          },
+        }
+      );
+
+      // Animate dots
+      gsap.utils.toArray<HTMLElement>(".exp-dot").forEach((dot) => {
+        gsap.fromTo(
+          dot,
+          { scale: 0, opacity: 0 },
+          {
+            scale: 1,
+            opacity: 1,
+            duration: 0.4,
+            ease: "back.out(2)",
+            scrollTrigger: {
+              trigger: dot,
+              start: "top 85%",
+            },
+          }
+        );
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
     <section
       id="experience"
+      ref={sectionRef}
       aria-label="Experience section"
       style={{
         position: "relative",
-        paddingTop: "10rem",
-        paddingBottom: "10rem",
+        paddingTop: "9rem",
+        paddingBottom: "9rem",
         overflow: "hidden",
         background: "hsl(var(--surface))",
+        perspective: "1200px",
       }}
     >
-      {/* Top/bottom border */}
+      {/* Borders */}
       <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "1px", background: "linear-gradient(to right, transparent, hsl(var(--accent-2) / 0.3), transparent)" }} />
       <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "1px", background: "linear-gradient(to right, transparent, hsl(var(--accent-1) / 0.2), transparent)" }} />
 
       {/* Watermark */}
       <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "none", overflow: "hidden", userSelect: "none" }}>
-        <span style={{ fontSize: "20vw", fontWeight: 900, color: "white", opacity: 0.02, letterSpacing: "-0.04em" }}>XP</span>
+        <span style={{ fontSize: "22vw", fontWeight: 900, color: "white", opacity: 0.018, letterSpacing: "-0.04em" }}>XP</span>
       </div>
 
-      {/* Glow orb */}
-      <div
-        className="bg-orb"
-        data-y="-0.25"
-        style={{
-          position: "absolute",
-          top: "10%",
-          left: "-5%",
-          width: "500px",
-          height: "500px",
-          borderRadius: "50%",
-          background: "radial-gradient(circle, hsl(262 80% 65% / 0.06) 0%, transparent 70%)",
-          pointerEvents: "none",
-        }}
-      />
+      {/* Glow orbs */}
+      <div style={{ position: "absolute", top: "10%", left: "-5%", width: "500px", height: "500px", borderRadius: "50%", background: "radial-gradient(circle, hsl(262 80% 65% / 0.07) 0%, transparent 70%)", pointerEvents: "none" }} />
+      <div style={{ position: "absolute", bottom: "10%", right: "-5%", width: "400px", height: "400px", borderRadius: "50%", background: "radial-gradient(circle, hsl(190 80% 60% / 0.05) 0%, transparent 70%)", pointerEvents: "none" }} />
 
       <div className="section-container" style={{ position: "relative" }}>
         {/* Header */}
-        <div className="mb-24">
-          <div className="section-label mb-6" data-reveal>
-            {t("experience.label")}
-          </div>
+        <div style={{ marginBottom: "5rem" }}>
+          <div className="section-label mb-6" data-reveal>{t("experience.label")}</div>
           <div
             data-title
             style={{
@@ -73,104 +141,175 @@ export function ExperienceSection() {
         </div>
 
         {/* Timeline */}
-        <div style={{ position: "relative", maxWidth: "52rem", marginLeft: "auto", marginRight: "auto", paddingLeft: "3rem" }}>
-          {/* Vertical line */}
-          <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: "1px", background: "hsl(var(--border))" }}>
-            {/* GSAP-animated fill */}
+        <div style={{ position: "relative", maxWidth: "56rem", margin: "0 auto" }}>
+          {/* Vertical spine */}
+          <div
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: 0,
+              bottom: 0,
+              width: "2px",
+              transform: "translateX(-50%)",
+              background: "hsl(var(--border))",
+            }}
+          >
             <div
-              className="timeline-line-inner"
+              className="exp-timeline-fill"
               style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
+                position: "absolute", top: 0, left: 0, right: 0, bottom: 0,
                 background: "linear-gradient(to bottom, hsl(var(--accent-1)), hsl(var(--accent-2)))",
-                transformOrigin: "top center",
+                transformOrigin: "top",
               }}
             />
           </div>
 
-          {/* Experience items */}
-          <div data-stagger style={{ display: "flex", flexDirection: "column", gap: "5rem" }}>
-            {EXPERIENCES.map((exp, i) => (
-              <div key={exp.id} data-item style={{ position: "relative" }}>
-                {/* Timeline dot */}
-                <div
-                  style={{
-                    position: "absolute",
-                    left: "-3.4rem",
-                    top: "0.25rem",
-                    width: "14px",
-                    height: "14px",
-                    borderRadius: "50%",
-                    background: "linear-gradient(135deg, hsl(var(--accent-1)), hsl(var(--accent-2)))",
-                    boxShadow: `0 0 0 4px hsl(var(--surface)), 0 0 16px hsl(var(--accent-1) / 0.4)`,
-                    zIndex: 1,
-                  }}
-                />
+          {/* Cards */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "3.5rem" }}>
+            {EXPERIENCES.map((exp, i) => {
+              const isLeft = i % 2 === 0;
+              const color = ACCENT_COLORS[i % ACCENT_COLORS.length];
+              const key = EXP_KEYS[i] ?? `e${i + 1}`;
+              const achCount = ACHIEVEMENT_COUNTS[i] ?? 3;
+              const achievementKeys = Array.from({ length: achCount }, (_, j) => `experience.${key}a${j + 1}` as any);
 
-                {/* Card */}
+              return (
                 <div
+                  key={exp.id}
                   style={{
-                    background: "hsl(var(--bg))",
-                    border: "1px solid hsl(var(--border))",
-                    borderRadius: "1.25rem",
-                    padding: "2rem",
-                    transition: "border-color 0.3s ease, box-shadow 0.3s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    const el = e.currentTarget as HTMLElement;
-                    el.style.borderColor = "hsl(var(--accent-1) / 0.3)";
-                    el.style.boxShadow = "0 0 40px hsl(var(--accent-1) / 0.05)";
-                  }}
-                  onMouseLeave={(e) => {
-                    const el = e.currentTarget as HTMLElement;
-                    el.style.borderColor = "hsl(var(--border))";
-                    el.style.boxShadow = "none";
+                    display: "grid",
+                    gridTemplateColumns: "1fr 2rem 1fr",
+                    alignItems: "start",
+                    position: "relative",
                   }}
                 >
-                  {/* Period */}
-                  <div className="flex items-center gap-2 mb-4" style={{ color: "hsl(var(--text-muted))", fontSize: "0.8rem" }}>
-                    <Calendar size={12} />
-                    {exp.period}
+                  {/* Left cell */}
+                  <div style={{ display: "flex", justifyContent: "flex-end", paddingRight: "2rem" }}>
+                    {isLeft && (
+                      <div className="exp-card" style={{ maxWidth: "22rem", transformStyle: "preserve-3d" }}>
+                        <ExperienceCard exp={exp} color={color} expKey={key} achievementKeys={achievementKeys} t={t} />
+                      </div>
+                    )}
+                    {!isLeft && (
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", justifyContent: "flex-start", paddingTop: "0.75rem" }}>
+                        <span style={{ fontSize: "0.72rem", fontFamily: "monospace", color: color, fontWeight: 700, letterSpacing: "0.06em" }}>{exp.period}</span>
+                        <span style={{ fontSize: "0.68rem", color: "hsl(var(--text-muted))", marginTop: "0.25rem" }}>{exp.company}</span>
+                      </div>
+                    )}
                   </div>
 
-                  {/* Role */}
-                  <h3 style={{ fontSize: "clamp(1.2rem, 2vw, 1.6rem)", fontWeight: 900, color: "white", marginBottom: "0.3rem", lineHeight: 1.15, letterSpacing: "-0.01em" }}>
-                    {exp.role}
-                  </h3>
-                  <p style={{ fontSize: "0.875rem", fontWeight: 600, color: "hsl(var(--accent-1))", marginBottom: "1rem" }}>
-                    {exp.company}
-                  </p>
-                  <p style={{ fontSize: "0.875rem", color: "hsl(var(--text-muted))", lineHeight: 1.7, marginBottom: "1.5rem" }}>
-                    {exp.description}
-                  </p>
+                  {/* Center dot */}
+                  <div style={{ display: "flex", justifyContent: "center", paddingTop: "1.2rem" }}>
+                    <div
+                      className="exp-dot"
+                      style={{
+                        width: "14px", height: "14px", borderRadius: "50%",
+                        background: `linear-gradient(135deg, ${color}, ${color}99)`,
+                        boxShadow: `0 0 0 4px hsl(var(--surface)), 0 0 20px ${color}55`,
+                        zIndex: 1,
+                        flexShrink: 0,
+                      }}
+                    />
+                  </div>
 
-                  {/* Achievements */}
-                  <ul style={{ display: "flex", flexDirection: "column", gap: "0.625rem", marginBottom: "1.5rem" }}>
-                    {exp.achievements.map((a) => (
-                      <li key={a} style={{ display: "flex", gap: "0.75rem", fontSize: "0.875rem", color: "hsl(var(--text-subtle))", alignItems: "flex-start" }}>
-                        <CheckCircle2 size={14} style={{ color: "#10b981", flexShrink: 0, marginTop: "0.15rem" }} />
-                        {a}
-                      </li>
-                    ))}
-                  </ul>
-
-                  {/* Tech */}
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", paddingTop: "1rem", borderTop: "1px solid hsl(var(--border))" }}>
-                    {exp.technologies.map((t) => (
-                      <span key={t} style={{ fontSize: "0.7rem", fontFamily: "monospace", padding: "0.2rem 0.6rem", borderRadius: "99px", background: "hsl(var(--surface))", color: "hsl(var(--text-muted))", border: "1px solid hsl(var(--border))" }}>
-                        {t}
-                      </span>
-                    ))}
+                  {/* Right cell */}
+                  <div style={{ paddingLeft: "2rem" }}>
+                    {!isLeft && (
+                      <div className="exp-card" style={{ maxWidth: "22rem", transformStyle: "preserve-3d" }}>
+                        <ExperienceCard exp={exp} color={color} expKey={key} achievementKeys={achievementKeys} t={t} />
+                      </div>
+                    )}
+                    {isLeft && (
+                      <div style={{ paddingTop: "0.75rem" }}>
+                        <span style={{ fontSize: "0.72rem", fontFamily: "monospace", color: color, fontWeight: 700, letterSpacing: "0.06em" }}>{exp.period}</span>
+                        <br />
+                        <span style={{ fontSize: "0.68rem", color: "hsl(var(--text-muted))", marginTop: "0.25rem", display: "block" }}>{exp.company}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
     </section>
+  );
+}
+
+function ExperienceCard({
+  exp,
+  color,
+  expKey,
+  achievementKeys,
+  t,
+}: {
+  exp: (typeof EXPERIENCES)[0];
+  color: string;
+  expKey: string;
+  achievementKeys: any[];
+  t: (key: any) => string;
+}) {
+  const role = t(`experience.${expKey}role` as any);
+  const desc = t(`experience.${expKey}desc` as any);
+
+  return (
+    <div
+      style={{
+        background: "hsl(var(--bg))",
+        border: `1px solid ${color}22`,
+        borderTop: `3px solid ${color}`,
+        borderRadius: "1.25rem",
+        padding: "1.75rem",
+        transition: "box-shadow 0.35s ease, transform 0.35s ease",
+        position: "relative",
+        overflow: "hidden",
+      }}
+      onMouseEnter={(e) => {
+        const el = e.currentTarget as HTMLElement;
+        el.style.boxShadow = `0 12px 50px ${color}22, 0 0 0 1px ${color}33`;
+        el.style.transform = "translateY(-4px) rotateX(2deg)";
+      }}
+      onMouseLeave={(e) => {
+        const el = e.currentTarget as HTMLElement;
+        el.style.boxShadow = "none";
+        el.style.transform = "none";
+      }}
+    >
+      {/* Glow */}
+      <div style={{ position: "absolute", bottom: "-30px", right: "-30px", width: "100px", height: "100px", borderRadius: "50%", background: `radial-gradient(circle, ${color}15 0%, transparent 70%)`, pointerEvents: "none" }} />
+
+      {/* Role — translated */}
+      <h3 style={{ fontSize: "1rem", fontWeight: 800, color: "white", marginBottom: "0.2rem", lineHeight: 1.2, letterSpacing: "-0.01em" }}>
+        {role || exp.role}
+      </h3>
+      <p style={{ fontSize: "0.78rem", fontWeight: 700, color: color, marginBottom: "0.9rem" }}>{exp.company}</p>
+      <p style={{ fontSize: "0.82rem", color: "hsl(var(--text-muted))", lineHeight: 1.65, marginBottom: "1rem" }}>
+        {desc || exp.description}
+      </p>
+
+      {/* Achievements — translated */}
+      <ul style={{ display: "flex", flexDirection: "column", gap: "0.45rem", marginBottom: "1rem" }}>
+        {achievementKeys.map((ak, j) => {
+          const translated = t(ak);
+          const fallback = exp.achievements[j];
+          return (
+            <li key={j} style={{ display: "flex", gap: "0.6rem", fontSize: "0.78rem", color: "hsl(var(--text-subtle))", alignItems: "flex-start" }}>
+              <span style={{ width: "5px", height: "5px", borderRadius: "50%", background: color, flexShrink: 0, marginTop: "0.35rem", boxShadow: `0 0 6px ${color}80` }} />
+              {translated || fallback}
+            </li>
+          );
+        })}
+      </ul>
+
+      {/* Tech stack — unchanged (technical, no translation needed) */}
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "0.35rem", paddingTop: "0.75rem", borderTop: `1px solid ${color}18` }}>
+        {exp.technologies.map((tech) => (
+          <span key={tech} style={{ fontSize: "0.65rem", fontFamily: "monospace", padding: "0.18rem 0.5rem", borderRadius: "99px", background: `${color}14`, color: color, border: `1px solid ${color}30` }}>
+            {tech}
+          </span>
+        ))}
+      </div>
+    </div>
   );
 }

@@ -169,8 +169,8 @@ export function GithubSection() {
     <section id="github" className="relative py-28 bg-[hsl(var(--surface))]" aria-label="GitHub activity">
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-green-500/40 to-transparent" />
 
+      {/* Header & stats — constrained */}
       <div className="section-container">
-        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -196,64 +196,67 @@ export function GithubSection() {
             </div>
           )}
         </motion.div>
+      </div>
 
-        {/* ─── Contribution grids — 3 years ─────────────────────────────── */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          style={{
-            background: "#0d1117",
-            border: "1px solid #21262d",
-            borderRadius: "1rem",
-            padding: "1.75rem",
-            marginBottom: "2.5rem",
-          }}
-        >
-          {/* Title row */}
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
-              <Activity size={16} style={{ color: "#39d353" }} />
-              <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "#c9d1d9", fontFamily: "monospace" }}>
-                Contribution History
-              </span>
-            </div>
-            {/* Legend */}
-            <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
-              <span style={{ fontSize: "0.65rem", color: "#484f58", fontFamily: "monospace" }}>Less</span>
-              {GH_COLORS.map((c, i) => (
-                <div key={i} style={{ width: "11px", height: "11px", borderRadius: "2px", background: c, boxShadow: i >= 3 ? `0 0 4px ${c}80` : "none" }} />
+      {/* ─── Contribution grids — FULL WIDTH ─────────────────────────────── */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        style={{
+          background: "#0d1117",
+          borderTop: "1px solid #21262d",
+          borderBottom: "1px solid #21262d",
+          padding: "2rem clamp(1.5rem, 5vw, 4rem)",
+          marginBottom: "2.5rem",
+          width: "100%",
+        }}
+      >
+        {/* Title row */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+            <Activity size={16} style={{ color: "#39d353" }} />
+            <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "#c9d1d9", fontFamily: "monospace" }}>
+              Contribution History
+            </span>
+          </div>
+          {/* Legend */}
+          <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
+            <span style={{ fontSize: "0.65rem", color: "#484f58", fontFamily: "monospace" }}>Less</span>
+            {GH_COLORS.map((c, i) => (
+              <div key={i} style={{ width: "11px", height: "11px", borderRadius: "2px", background: c, boxShadow: i >= 3 ? `0 0 4px ${c}80` : "none" }} />
+            ))}
+            <span style={{ fontSize: "0.65rem", color: "#484f58", fontFamily: "monospace" }}>More</span>
+          </div>
+        </div>
+
+        {contribLoading ? (
+          /* Terminal-style loading for contributions */
+          <div style={{ fontFamily: "monospace", fontSize: "0.75rem", color: "#8b949e" }}>
+            <div style={{ color: "#58a6ff", marginBottom: "0.3rem" }}>$ fetch contributions --years 2024,2025,2026</div>
+            <div style={{ color: "#39d353" }}>  ▶ Loading contribution data...</div>
+            <div style={{ display: "flex", gap: "0.4rem", marginTop: "0.75rem" }}>
+              {[0,1,2,3,4,5,6,7,8].map((i) => (
+                <div key={i} style={{ width: "11px", height: "11px", borderRadius: "2px", background: "#161b22", animation: `pulse 1.5s ease-in-out ${i * 0.1}s infinite` }} />
               ))}
-              <span style={{ fontSize: "0.65rem", color: "#484f58", fontFamily: "monospace" }}>More</span>
             </div>
           </div>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+            {[...contribs].reverse().map((yr) => (
+              <ContribGrid key={yr.year} data={yr} />
+            ))}
+            {contribs.length === 0 && (
+              <p style={{ color: "#8b949e", fontSize: "0.8rem", fontFamily: "monospace" }}>
+                — No contribution data available —
+              </p>
+            )}
+          </div>
+        )}
+      </motion.div>
 
-          {contribLoading ? (
-            /* Terminal-style loading for contributions */
-            <div style={{ fontFamily: "monospace", fontSize: "0.75rem", color: "#8b949e" }}>
-              <div style={{ color: "#58a6ff", marginBottom: "0.3rem" }}>$ fetch contributions --years 2024,2025,2026</div>
-              <div style={{ color: "#39d353" }}>  ▶ Loading contribution data...</div>
-              <div style={{ display: "flex", gap: "0.4rem", marginTop: "0.75rem" }}>
-                {[0,1,2,3,4,5,6,7,8].map((i) => (
-                  <div key={i} style={{ width: "11px", height: "11px", borderRadius: "2px", background: "#161b22", animation: `pulse 1.5s ease-in-out ${i * 0.1}s infinite` }} />
-                ))}
-              </div>
-            </div>
-          ) : (
-            <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
-              {[...contribs].reverse().map((yr) => (
-                <ContribGrid key={yr.year} data={yr} />
-              ))}
-              {contribs.length === 0 && (
-                <p style={{ color: "#8b949e", fontSize: "0.8rem", fontFamily: "monospace" }}>
-                  — No contribution data available —
-                </p>
-              )}
-            </div>
-          )}
-        </motion.div>
-
-        {/* Repos grid */}
+      {/* Repos grid — constrained */}
+      <div className="section-container">
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {Array.from({ length: 6 }).map((_, i) => (

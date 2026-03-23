@@ -117,7 +117,7 @@ export function HeroSection() {
         style={{ background: "linear-gradient(to top, hsl(var(--bg)) 0%, hsl(var(--bg) / 0.7) 40%, transparent 100%)" }} />
 
       {/* ── Main content (GSAP will scrub this up on scroll) ─────────────────── */}
-      <div className="hero-content relative z-10 flex flex-col items-center text-center w-full section-container gap-6 pt-24">
+      <div className="hero-content relative z-20 flex flex-col items-center text-center w-full section-container gap-6 pt-24">
 
         {/* Availability badge */}
         <div className="hero-eyebrow opacity-0">
@@ -140,7 +140,7 @@ export function HeroSection() {
           <div className="overflow-hidden leading-none">
             <div className="hero-name-1"
               style={{
-                fontSize: "clamp(4.5rem, 13vw, 12rem)",
+                fontSize: "clamp(3rem, 8.5vw, 9rem)",
                 fontWeight: 900,
                 letterSpacing: "-0.03em",
                 lineHeight: 1,
@@ -156,7 +156,7 @@ export function HeroSection() {
           <div className="overflow-hidden leading-none">
             <div className="hero-name-2"
               style={{
-                fontSize: "clamp(4.5rem, 13vw, 12rem)",
+                fontSize: "clamp(3rem, 8.5vw, 9rem)",
                 fontWeight: 900,
                 letterSpacing: "-0.03em",
                 lineHeight: 1,
@@ -252,7 +252,7 @@ export function HeroSection() {
 
         {/* Stats row */}
         <div className="hero-stats opacity-0 flex items-center gap-8 sm:gap-16 mt-4 pt-8"
-          style={{ borderTop: "1px solid hsl(var(--border) / 0.5)" }}>
+          style={{ borderTop: "1px solid hsl(var(--border) / 0.5)", position: "relative", zIndex: 30 }}>
           {[
             { value: PERSONAL_INFO.yearsOfExperience, suffix: "+", label: t("hero.yearsExp") },
             { value: 20, suffix: "+", label: t("hero.projects") },
