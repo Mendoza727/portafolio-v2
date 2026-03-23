@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "if exist pnpm-lock.yaml del pnpm-lock.yaml && if exist node_modules rmdir /s /q node_modules && pnpm install && next dev --turbopack",
+    "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "next lint",
