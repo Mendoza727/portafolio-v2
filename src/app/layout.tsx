@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { ThemeProvider } from "next-themes";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
 import { LenisProvider } from "@/components/animations/LenisProvider";
 import { CustomCursor } from "@/components/animations/CustomCursor";
 import { ScrollAnimations } from "@/components/animations/ScrollAnimations";
@@ -133,6 +134,7 @@ export default function RootLayout({
           </I18nProvider>
         </ThemeProvider>
         <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );
