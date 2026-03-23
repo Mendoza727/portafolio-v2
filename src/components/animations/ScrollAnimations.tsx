@@ -13,11 +13,11 @@ gsap.registerPlugin(ScrollTrigger);
  */
 export function ScrollAnimations() {
   useEffect(() => {
-    // Give DOM and Lenis a moment to settle
+    // Give GSAP a moment to settle after mount (page wrapper fades in at 200ms)
     const init = setTimeout(() => {
       ScrollTrigger.refresh();
       registerAnimations();
-    }, 400);
+    }, 100);
 
     return () => {
       clearTimeout(init);
