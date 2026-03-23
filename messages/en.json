@@ -88,8 +88,8 @@
   },
   "experience": {
     "label": "05 / Experience",
-    "heading1": "Where I've",
-    "heading2": "Delivered",
+    "heading1": "Professional",
+    "heading2": "Impact",
     "e1role": "Application Developer",
     "e1desc": "Built web and mobile apps with Django, PHP and Flutter for edtech and SMBs. Shipped a CMS that eliminated the need for developer involvement in day-to-day content updates.",
     "e1a1": "CMS adoption: non-technical users self-manage content with zero dev intervention",

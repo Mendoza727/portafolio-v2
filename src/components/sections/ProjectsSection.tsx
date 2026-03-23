@@ -175,7 +175,7 @@ export function ProjectsSection() {
               </div>
             </div>
             <a
-              href={`https://github.com/${PERSONAL_INFO.nickname}`}
+              href={`https://github.com/${PERSONAL_INFO.nickname}?tab=repositories`}
               target="_blank" rel="noopener noreferrer" data-reveal
               style={{ display: "inline-flex", alignItems: "center", gap: "0.4rem", fontSize: "0.875rem", color: "hsl(var(--text-muted))", textDecoration: "none", transition: "color 0.2s" }}
               onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = "white"; }}
