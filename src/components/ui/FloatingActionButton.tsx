@@ -1,6 +1,4 @@
 "use client";
-/* ↑ This directive MUST be the very first line — no blank lines before it */
-
 import { useState, useEffect } from "react";
 import { ArrowUp } from "lucide-react";
 
@@ -22,33 +20,38 @@ export function FloatingActionButton() {
       style={{
         position: "fixed",
         bottom: "2rem",
-        right: "2rem",
-        width: "3rem",
-        height: "3rem",
-        borderRadius: "50%",
+        left: "50%",
+        transform: "translateX(-50%)",
         display: "flex",
         alignItems: "center",
-        justifyContent: "center",
+        gap: "0.45rem",
+        padding: "0.55rem 1.2rem",
+        borderRadius: "99px",
         background: "linear-gradient(135deg, hsl(var(--accent-1)), hsl(var(--accent-2)))",
         color: "white",
-        boxShadow: "0 4px 20px rgba(0,0,0,0.3), 0 0 20px hsl(var(--accent-1)/0.4)",
+        boxShadow: "0 4px 24px rgba(0,0,0,0.35), 0 0 24px hsl(var(--accent-1)/0.4)",
         border: "none",
         cursor: "pointer",
         zIndex: 9999,
-        transition: "transform 0.2s ease, box-shadow 0.2s ease",
+        fontSize: "0.75rem",
+        fontWeight: 700,
+        letterSpacing: "0.08em",
+        textTransform: "uppercase",
+        whiteSpace: "nowrap",
+        backdropFilter: "blur(8px)",
+        transition: "box-shadow 0.2s ease, opacity 0.2s ease",
       }}
       onMouseEnter={(e) => {
         const el = e.currentTarget as HTMLButtonElement;
-        el.style.transform = "scale(1.12)";
-        el.style.boxShadow = "0 6px 28px rgba(0,0,0,0.4), 0 0 28px hsl(var(--accent-1)/0.5)";
+        el.style.boxShadow = "0 8px 32px rgba(0,0,0,0.45), 0 0 36px hsl(var(--accent-1)/0.6)";
       }}
       onMouseLeave={(e) => {
         const el = e.currentTarget as HTMLButtonElement;
-        el.style.transform = "scale(1)";
-        el.style.boxShadow = "0 4px 20px rgba(0,0,0,0.3), 0 0 20px hsl(var(--accent-1)/0.4)";
+        el.style.boxShadow = "0 4px 24px rgba(0,0,0,0.35), 0 0 24px hsl(var(--accent-1)/0.4)";
       }}
     >
-      <ArrowUp size={20} />
+      <ArrowUp size={14} />
+      Volver arriba
     </button>
   );
 }
