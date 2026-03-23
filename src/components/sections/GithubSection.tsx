@@ -5,6 +5,10 @@ import { Star, GitFork, ExternalLink, Activity, Calendar } from "lucide-react";
 import type { GithubRepo, GithubProfile } from "@/types";
 import { PERSONAL_INFO } from "@/lib/data";
 
+const CONTRIBUTIONS_API =
+  process.env.NEXT_PUBLIC_GITHUB_CONTRIBUTIONS_API ??
+  "https://github-contributions-api.jogruber.de/v4";
+
 // GitHub contribution green palette
 const GH_COLORS = ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"];
 
@@ -141,7 +145,7 @@ export function GithubSection() {
         const years = [2024, 2025, 2026];
         const results = await Promise.allSettled(
           years.map((y) =>
-            fetch(`https://github-contributions-api.jogruber.de/v4/${PERSONAL_INFO.nickname}?y=${y}`)
+            fetch(`${CONTRIBUTIONS_API}/${PERSONAL_INFO.nickname}?y=${y}`)
               .then((r) => r.json())
           )
         );

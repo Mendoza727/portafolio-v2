@@ -1,10 +1,14 @@
 "use client";
-import { useState } from "react";
-import { Send, Mail, Phone, Github, Linkedin, CheckCircle2, AlertCircle, MapPin } from "lucide-react";
+import { useCallback, useState } from "react";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import {
+  Send, Mail, Phone, Github, Linkedin,
+  CheckCircle2, AlertCircle, MapPin, ShieldCheck,
+} from "lucide-react";
 import { PERSONAL_INFO, SOCIAL_LINKS } from "@/lib/data";
 import { useI18n } from "@/i18n/I18nProvider";
 
-const FORMSPREE_URL = "https://formspree.io/f/xgonjnqk";
+const FORMSPREE_URL = process.env.NEXT_PUBLIC_FORMSPREE_URL!;
 
 function InputStyle(hasError: boolean) {
   return {
@@ -22,44 +26,59 @@ function InputStyle(hasError: boolean) {
 
 export function ContactSection() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
+  const [form, setForm]     = useState({ name: "", email: "", subject: "", message: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const { t } = useI18n();
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
+  /* ── Field validation ── */
   const validate = () => {
     const e: Record<string, string> = {};
-    if (form.name.length < 2) e.name = "At least 2 characters";
-    if (!/^\S+@\S+\.\S+$/.test(form.email)) e.email = "Valid email required";
-    if (form.subject.length < 5) e.subject = "At least 5 characters";
-    if (form.message.length < 20) e.message = "At least 20 characters";
+    if (form.name.length < 2)               e.name    = "Al menos 2 caracteres";
+    if (!/^\S+@\S+\.\S+$/.test(form.email)) e.email   = "Email válido requerido";
+    if (form.subject.length < 5)            e.subject = "Al menos 5 caracteres";
+    if (form.message.length < 20)           e.message = "Al menos 20 caracteres";
     setErrors(e);
     return Object.keys(e).length === 0;
   };
 
-  const onSubmit = async (ev: React.FormEvent) => {
+  /* ── Submit — gets v3 token invisibly then POSTs to Formspree ── */
+  const onSubmit = useCallback(async (ev: React.FormEvent) => {
     ev.preventDefault();
     if (!validate()) return;
+
+    if (!executeRecaptcha) {
+      setStatus("error");
+      return;
+    }
+
     setStatus("loading");
+
     try {
+      // Execute reCAPTCHA v3 invisibly — returns a token
+      const token = await executeRecaptcha("contact_form");
+
       const res = await fetch(FORMSPREE_URL, {
         method: "POST",
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, "g-recaptcha-response": token }),
         headers: { "Content-Type": "application/json", Accept: "application/json" },
       });
+
       if (!res.ok) throw new Error();
       setStatus("success");
       setForm({ name: "", email: "", subject: "", message: "" });
     } catch {
       setStatus("error");
     }
-  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [executeRecaptcha, form]);
 
   const contactItems = [
-    { icon: Mail,     label: t("contact.email"),   value: PERSONAL_INFO.email,             href: `mailto:${PERSONAL_INFO.email}` },
-    { icon: Phone,    label: t("contact.phone"),   value: PERSONAL_INFO.phone,             href: `tel:${SOCIAL_LINKS.phone}` },
-    { icon: Github,   label: "GitHub",             value: `@${PERSONAL_INFO.nickname}`,    href: SOCIAL_LINKS.github },
-    { icon: Linkedin, label: "LinkedIn",           value: `/${PERSONAL_INFO.nickname}`,    href: SOCIAL_LINKS.linkedin },
-    { icon: MapPin,   label: "Location",           value: PERSONAL_INFO.location,          href: undefined },
+    { icon: Mail,     label: t("contact.email"),   value: PERSONAL_INFO.email,          href: `mailto:${PERSONAL_INFO.email}` },
+    { icon: Phone,    label: t("contact.phone"),   value: PERSONAL_INFO.phone,          href: `tel:${SOCIAL_LINKS.phone}` },
+    { icon: Github,   label: "GitHub",             value: `@${PERSONAL_INFO.nickname}`, href: SOCIAL_LINKS.github },
+    { icon: Linkedin, label: "LinkedIn",           value: `/${PERSONAL_INFO.nickname}`, href: SOCIAL_LINKS.linkedin },
+    { icon: MapPin,   label: "Location",           value: PERSONAL_INFO.location,       href: undefined },
   ];
 
   const field = (id: keyof typeof form) => ({
@@ -82,7 +101,6 @@ export function ContactSection() {
     >
       <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "1px", background: "linear-gradient(to right, transparent, hsl(var(--accent-1) / 0.3), transparent)" }} />
       <div className="absolute inset-0 dot-grid opacity-[0.08] pointer-events-none" />
-
       <div style={{ position: "absolute", top: "10%", right: "-5%", width: "480px", height: "480px", borderRadius: "50%", background: "radial-gradient(circle, hsl(var(--accent-1) / 0.07) 0%, transparent 70%)", pointerEvents: "none" }} />
       <div style={{ position: "absolute", bottom: "10%", left: "-5%", width: "320px", height: "320px", borderRadius: "50%", background: "radial-gradient(circle, hsl(var(--accent-2) / 0.06) 0%, transparent 70%)", pointerEvents: "none" }} />
 
@@ -139,7 +157,7 @@ export function ContactSection() {
               </div>
             ))}
 
-            {/* Availability */}
+            {/* Availability badge */}
             <div style={{ marginTop: "1.5rem", padding: "1.25rem", borderRadius: "1rem", background: "hsl(var(--surface))", border: "1px solid hsl(160 80% 40% / 0.2)" }}>
               <div className="flex items-center gap-2 mb-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -151,13 +169,14 @@ export function ContactSection() {
             </div>
           </aside>
 
-          {/* Right: Form → Formspree */}
+          {/* Right: Form */}
           <div className="lg:col-span-3" data-reveal>
             <form
               onSubmit={onSubmit}
               noValidate
               style={{ background: "hsl(var(--surface))", border: "1px solid hsl(var(--border))", borderRadius: "1.5rem", padding: "2.5rem", display: "flex", flexDirection: "column", gap: "1.25rem" }}
             >
+              {/* Name + Email */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
                   <label htmlFor="name" style={{ display: "block", fontSize: "0.7rem", fontWeight: 700, color: "hsl(var(--text-muted))", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: "0.5rem" }}>
@@ -175,6 +194,7 @@ export function ContactSection() {
                 </div>
               </div>
 
+              {/* Subject */}
               <div>
                 <label htmlFor="subject" style={{ display: "block", fontSize: "0.7rem", fontWeight: 700, color: "hsl(var(--text-muted))", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: "0.5rem" }}>
                   {t("contact.subjectLabel")}
@@ -183,6 +203,7 @@ export function ContactSection() {
                 {errors.subject && <p style={{ color: "#f87171", fontSize: "0.75rem", marginTop: "0.25rem" }}>{errors.subject}</p>}
               </div>
 
+              {/* Message */}
               <div>
                 <label htmlFor="message" style={{ display: "block", fontSize: "0.7rem", fontWeight: 700, color: "hsl(var(--text-muted))", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: "0.5rem" }}>
                   {t("contact.messageLabel")}
@@ -197,6 +218,22 @@ export function ContactSection() {
                 {errors.message && <p style={{ color: "#f87171", fontSize: "0.75rem", marginTop: "0.25rem" }}>{errors.message}</p>}
               </div>
 
+              {/* reCAPTCHA v3 badge — no widget, just info */}
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.6rem 0.9rem", borderRadius: "0.6rem", background: "hsl(var(--surface-2))", border: "1px solid hsl(var(--border))" }}>
+                <ShieldCheck size={14} style={{ color: "hsl(var(--accent-2))", flexShrink: 0 }} />
+                <p style={{ fontSize: "0.68rem", color: "hsl(var(--text-muted))", lineHeight: 1.5 }}>
+                  Protegido por{" "}
+                  <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: "hsl(var(--accent-2))", textDecoration: "none" }}>
+                    Google reCAPTCHA v3
+                  </a>{" "}
+                  — verificación anti-spam invisible ·{" "}
+                  <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" style={{ color: "hsl(var(--accent-2))", textDecoration: "none" }}>
+                    Términos
+                  </a>
+                </p>
+              </div>
+
+              {/* Status messages */}
               {status === "success" && (
                 <div className="flex items-center gap-2" style={{ color: "#34d399", fontSize: "0.875rem", background: "hsl(160 80% 40% / 0.08)", border: "1px solid hsl(160 80% 40% / 0.2)", borderRadius: "0.75rem", padding: "0.75rem 1rem" }}>
                   <CheckCircle2 size={15} />
@@ -210,6 +247,7 @@ export function ContactSection() {
                 </div>
               )}
 
+              {/* Submit */}
               <button
                 type="submit"
                 disabled={status === "loading"}

@@ -353,18 +353,32 @@ Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
 
 ## 🔐 Variables de Entorno
 
-El proyecto no requiere variables de entorno obligatorias para funcionar en desarrollo. El formulario de contacto usa Formspree (endpoint público).
+Copia `.env.example` → `.env.local` y rellena tus valores:
 
-Si deseas configurar un backend propio para emails:
-
-```env
-# .env.local (opcional)
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=tu@email.com
-SMTP_PASS=tu_password
-CONTACT_EMAIL=destino@email.com
+```bash
+cp .env.example .env.local
 ```
+
+| Variable | Requerida | Descripción |
+|---|---|---|
+| `NEXT_PUBLIC_FORMSPREE_URL` | ✅ | Endpoint de Formspree para el formulario de contacto |
+| `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` | ✅ | Site key de Google reCAPTCHA v2 |
+| `NEXT_PUBLIC_GITHUB_USERNAME` | ✅ | Username de GitHub (para API de repos y contribuciones) |
+| `NEXT_PUBLIC_GITHUB_CONTRIBUTIONS_API` | ⬜ | Base URL de la API de contribuciones (default: jogruber.de) |
+| `NEXT_PUBLIC_OWNER_NAME` | ⬜ | Tu nombre completo |
+| `NEXT_PUBLIC_OWNER_EMAIL` | ⬜ | Tu email de contacto |
+| `NEXT_PUBLIC_OWNER_PHONE` | ⬜ | Teléfono en formato legible |
+| `NEXT_PUBLIC_OWNER_PHONE_E164` | ⬜ | Teléfono en formato E.164 (`+57...`) |
+| `NEXT_PUBLIC_OWNER_LOCATION` | ⬜ | Tu ciudad / país |
+| `NEXT_PUBLIC_SOCIAL_GITHUB` | ⬜ | URL completa de tu perfil GitHub |
+| `NEXT_PUBLIC_SOCIAL_LINKEDIN` | ⬜ | URL completa de tu perfil LinkedIn |
+| `NEXT_PUBLIC_SOCIAL_TWITTER` | ⬜ | URL completa de tu perfil Twitter/X |
+
+> [!NOTE]
+> Todas las variables usan el prefijo `NEXT_PUBLIC_` porque son accedidas en el cliente (browser). `.env.local` está en `.gitignore` y **nunca se sube al repositorio**.
+
+> [!CAUTION]
+> La reCAPTCHA **secret key** (diferente al site key) NO debe ir aquí. Si en el futuro implementas verificación server-side, agrégala sin el prefijo `NEXT_PUBLIC_` en una API Route.
 
 ---
 

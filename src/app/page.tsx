@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 import { Navigation } from "@/components/ui/Navigation";
 import { Footer } from "@/components/ui/Footer";
 import { HeroSection } from "@/components/sections/HeroSection";
@@ -17,7 +18,10 @@ export default function HomePage() {
   const [loaded, setLoaded] = useState(false);
 
   return (
-    <>
+    <GoogleReCaptchaProvider
+      reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ?? ""}
+      scriptProps={{ async: true, defer: true }}
+    >
       {/* CLI Splash Loader */}
       {!loaded && <CliLoader onDone={() => setLoaded(true)} />}
 
@@ -37,6 +41,6 @@ export default function HomePage() {
 
       {/* Footer */}
       <Footer />
-    </>
+    </GoogleReCaptchaProvider>
   );
 }

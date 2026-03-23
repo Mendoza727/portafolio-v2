@@ -23,25 +23,25 @@ export const NAV_ITEMS: NavItem[] = [
 
 // ─── Personal Info ────────────────────────────────────────────────────────────
 export const PERSONAL_INFO = {
-  name: "Juan Camilo Mendoza",
-  nickname: "Mendoza727",
-  title: "Full-Stack Developer · AI & Automation",
-  tagline: "Architecting digital experiences that push the boundaries of the web.",
-  bio: "Full-Stack Developer with experience in scalable web and mobile applications using multiple programming languages. Specialized in AI integration and automation of documents and processes.",
-  location: "Colombia",
-  availability: "Available for freelance",
+  name:              process.env.NEXT_PUBLIC_OWNER_NAME     ?? "Juan Camilo Mendoza",
+  nickname:          process.env.NEXT_PUBLIC_GITHUB_USERNAME ?? "Mendoza727",
+  title:             "Full-Stack Developer · AI & Automation",
+  tagline:           "Architecting digital experiences that push the boundaries of the web.",
+  bio:               "Full-Stack Developer with experience in scalable web and mobile applications using multiple programming languages. Specialized in AI integration and automation of documents and processes.",
+  location:          process.env.NEXT_PUBLIC_OWNER_LOCATION  ?? "Colombia",
+  availability:      "Available for freelance",
   yearsOfExperience: 4,
-  phone: "(301) 479-8364",
-  email: "juancamilomendozavillegas14@gmail.com",
+  phone:             process.env.NEXT_PUBLIC_OWNER_PHONE      ?? "(301) 479-8364",
+  email:             process.env.NEXT_PUBLIC_OWNER_EMAIL      ?? "juancamilomendozavillegas14@gmail.com",
 };
 
 // ─── Social Links ─────────────────────────────────────────────────────────────
 export const SOCIAL_LINKS = {
-  github: "https://github.com/Mendoza727",
-  linkedin: "https://www.linkedin.com/in/juancamilomendoza-dev/",
-  twitter: "https://twitter.com/mendoza727",
-  email: "juancamilomendozavillegas14@gmail.com",
-  phone: "+573014798364",
+  github:   process.env.NEXT_PUBLIC_SOCIAL_GITHUB   ?? "https://github.com/Mendoza727",
+  linkedin: process.env.NEXT_PUBLIC_SOCIAL_LINKEDIN ?? "https://www.linkedin.com/in/juancamilomendoza-dev/",
+  twitter:  process.env.NEXT_PUBLIC_SOCIAL_TWITTER  ?? "https://twitter.com/mendoza727",
+  email:    process.env.NEXT_PUBLIC_OWNER_EMAIL      ?? "juancamilomendozavillegas14@gmail.com",
+  phone:    process.env.NEXT_PUBLIC_OWNER_PHONE_E164 ?? "+573014798364",
 };
 
 // ─── Skills ──────────────────────────────────────────────────────────────────
@@ -340,30 +340,5 @@ export const SERVICES: Service[] = [
       "Performance monitoring",
     ],
     icon: "Server",
-  },
-];
-
-// ─── Testimonials ─────────────────────────────────────────────────────────────
-export const TESTIMONIALS: Testimonial[] = [
-  {
-    id: "1",
-    name: "Carlos Méndez",
-    role: "CEO",
-    company: "StartupMX",
-    text: "Juan transformed our idea into a polished product faster than I thought possible. His attention to performance and detail is exceptional.",
-  },
-  {
-    id: "2",
-    name: "Valentina Ríos",
-    role: "Product Manager",
-    company: "DigitalCo",
-    text: "The interactive platform he built for us blew our metrics. The animations feel absolutely premium.",
-  },
-  {
-    id: "3",
-    name: "Rodrigo Castillo",
-    role: "CTO",
-    company: "TechAgency",
-    text: "Juan's AI chatbot integration saved our support team 30+ hours per week. Brilliant architecture and clean code throughout.",
   },
 ];
