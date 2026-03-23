@@ -115,7 +115,7 @@ export const EXPERIENCES: Experience[] = [
       "Developed voice-based interactive web experience for aviation sector",
       "Built immersive experiences with Apple Vision SDK, SwiftUI and Objective-C",
     ],
-    technologies: ["React", "Node.js", "SwiftUI", "Apple Vision", "WebSockets", "Redis"],
+    technologies: ["React", "PHP", "Node.js", "SwiftUI", "Apple Vision", "WebSockets", "Redis"],
   },
   {
     id: "3",
@@ -132,7 +132,7 @@ export const EXPERIENCES: Experience[] = [
       "Participated in cloud deployments with AWS and Docker",
       "Published applications on iOS using Apple Developer SDK",
     ],
-    technologies: ["React Native", "AWS", "Docker", "Node.js", "iOS SDK"],
+    technologies: ["React Native", "Ionic", "Angular", "AWS", "Docker", "Node.js", "iOS SDK"],
   },
   {
     id: "4",
@@ -148,7 +148,7 @@ export const EXPERIENCES: Experience[] = [
       "Developed modules with React + Node.js integrated with MySQL",
       "Integrated REST APIs and resolved production incidents",
     ],
-    technologies: ["React", "Node.js", "MySQL", "REST APIs"],
+    technologies: ["React", "Node.js", "MySQL", "REST APIs", "PHP"],
   },
   {
     id: "5",
@@ -165,7 +165,7 @@ export const EXPERIENCES: Experience[] = [
       "Published apps on both App Store and Google Play",
       "Integrated real-time communications with Twilio",
     ],
-    technologies: ["Node.js", "Twilio", "iOS", "Android", "React"],
+    technologies: ["Node.js", "Twilio", "iOS", "Android", "React", "Angular"],
   },
 ];
 
@@ -174,24 +174,24 @@ export const EDUCATION: Education[] = [
   {
     id: "1",
     institution: "Fundación Universitaria del Area Andina",
-    degree: "Systems Engineering",
-    period: "Feb 2025 — Present",
+    degree: "Ingeniería de Sistemas",
+    period: "Feb 2025 —",
     startDate: "2025-02-01",
     current: true,
   },
   {
     id: "2",
     institution: "SENA — Servicio Nacional de Aprendizaje",
-    degree: "Software Programming Technician",
-    period: "Dec 2021 — Jun 2022",
+    degree: "Técnico en Programación de Software",
+    period: "Dic 2021 — Jun 2022",
     startDate: "2021-12-01",
     endDate: "2022-06-01",
   },
   {
     id: "3",
     institution: "Institución Educativa Nicolás Gómez Dávila",
-    degree: "Academic High School Diploma",
-    period: "Jan 2013 — Dec 2021",
+    degree: "Bachiller Académico",
+    period: "Ene 2013 — Dic 2021",
     startDate: "2013-01-01",
     endDate: "2021-12-01",
   },
