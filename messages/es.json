@@ -88,8 +88,8 @@
   },
   "experience": {
     "label": "05 / Experiencia",
-    "heading1": "Dónde he",
-    "heading2": "Entregado",
+    "heading1": "Trayectoria",
+    "heading2": "Profesional",
     "e1role": "Desarrollador de Aplicaciones",
     "e1desc": "Construí apps web y móviles con Django, PHP y Flutter para edtech y PYMEs. Desplegué un CMS que eliminó la dependencia del equipo técnico para actualizaciones de contenido del día a día.",
     "e1a1": "CMS adoptado: usuarios no técnicos gestionan contenido sin intervención de devs",
