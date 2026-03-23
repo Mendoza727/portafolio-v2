@@ -32,13 +32,13 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: PERSONAL_INFO.name }],
   creator: PERSONAL_INFO.name,
-  metadataBase: new URL("https://mendoza727.dev"),
+  metadataBase: new URL("https://mendoza727.vercel.app"),
   alternates: { canonical: "/" },
 
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://mendoza727.dev",
+    url: "https://mendoza727.vercel.app",
     title: `${PERSONAL_INFO.name} — ${PERSONAL_INFO.title}`,
     description: PERSONAL_INFO.tagline,
     siteName: `${PERSONAL_INFO.name} Portfolio`,
@@ -83,15 +83,27 @@ const personJsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: PERSONAL_INFO.name,
-  url: "https://mendoza727.dev",
+  url: "https://mendoza727.vercel.app",
   sameAs: [SOCIAL_LINKS.github, SOCIAL_LINKS.linkedin, SOCIAL_LINKS.twitter],
   jobTitle: PERSONAL_INFO.title,
   description: PERSONAL_INFO.bio,
-  knowsAbout: ["Web Development", "React", "Next.js", "TypeScript", "Node.js", "Three.js", "AI Integration"],
+  knowsAbout: [
+    "Web Development",
+    "React",
+    "Next.js",
+    "TypeScript",
+    "Node.js",
+    "Three.js",
+    "AI Integration",
+  ],
 };
 
 // ─── Root Layout ──────────────────────────────────────────────────────────────
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en" suppressHydrationWarning className="dark">
       <head>

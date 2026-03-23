@@ -11,8 +11,12 @@ const STEPS = [
   { text: "$ npm install --production", color: "#58a6ff", delay: 3300 },
   { text: "  ► Resolving dependencies...", color: "#8b949e", delay: 3900 },
   { text: "  ✔ Build complete (0 errors)", color: "#39d353", delay: 5100 },
-  { text: "$ deploy --env=production --region=col", color: "#d2a8ff", delay: 5600 },
-  { text: "  ✔ Live → mendoza727.dev", color: "#39d353", delay: 6300 },
+  {
+    text: "$ deploy --env=production --region=col",
+    color: "#d2a8ff",
+    delay: 5600,
+  },
+  { text: "  ✔ Live → mendoza727.vercel.app", color: "#39d353", delay: 6300 },
 ];
 
 // Bar fills over 3 seconds across 40 steps (slower, smoother)
@@ -21,8 +25,8 @@ const BAR_INTERVAL = 80; // ms per step = 3.2s total
 
 export function CliLoader({ onDone }: { onDone: () => void }) {
   const [visibleLines, setVisibleLines] = useState<number>(0);
-  const [barProgress, setBarProgress]   = useState<number>(0);
-  const [exiting, setExiting]           = useState(false);
+  const [barProgress, setBarProgress] = useState<number>(0);
+  const [exiting, setExiting] = useState(false);
   const done = useRef(false);
 
   useEffect(() => {
@@ -39,7 +43,7 @@ export function CliLoader({ onDone }: { onDone: () => void }) {
     for (let i = 1; i <= BAR_STEPS; i++) {
       const t = setTimeout(
         () => setBarProgress(i),
-        barStart + i * BAR_INTERVAL
+        barStart + i * BAR_INTERVAL,
       );
       timers.push(t);
     }
@@ -101,7 +105,13 @@ export function CliLoader({ onDone }: { onDone: () => void }) {
           {["#ff5f56", "#ffbd2e", "#27c93f"].map((c) => (
             <div
               key={c}
-              style={{ width: 13, height: 13, borderRadius: "50%", background: c, flexShrink: 0 }}
+              style={{
+                width: 13,
+                height: 13,
+                borderRadius: "50%",
+                background: c,
+                flexShrink: 0,
+              }}
             />
           ))}
           <span
@@ -114,7 +124,7 @@ export function CliLoader({ onDone }: { onDone: () => void }) {
               letterSpacing: "0.04em",
             }}
           >
-            zsh — portfolio@mendoza727.dev — 120×40
+            zsh — portfolio@mendoza727.vercel.app — 120×40
           </span>
         </div>
 
@@ -131,7 +141,13 @@ export function CliLoader({ onDone }: { onDone: () => void }) {
           }}
         >
           {/* Prompt line at top */}
-          <div style={{ color: "#484f58", fontSize: "0.75rem", marginBottom: "1.5rem" }}>
+          <div
+            style={{
+              color: "#484f58",
+              fontSize: "0.75rem",
+              marginBottom: "1.5rem",
+            }}
+          >
             Last login: {new Date().toDateString()} on ttys001
           </div>
 
@@ -150,24 +166,32 @@ export function CliLoader({ onDone }: { onDone: () => void }) {
           ))}
 
           {/* Blinking cursor */}
-          {barProgress === 0 && visibleLines > 0 && visibleLines < STEPS.length && (
-            <span
-              style={{
-                display: "inline-block",
-                width: "9px",
-                height: "16px",
-                background: "#39d353",
-                marginLeft: "2px",
-                animation: "blink 1s step-start infinite",
-                verticalAlign: "middle",
-              }}
-            />
-          )}
+          {barProgress === 0 &&
+            visibleLines > 0 &&
+            visibleLines < STEPS.length && (
+              <span
+                style={{
+                  display: "inline-block",
+                  width: "9px",
+                  height: "16px",
+                  background: "#39d353",
+                  marginLeft: "2px",
+                  animation: "blink 1s step-start infinite",
+                  verticalAlign: "middle",
+                }}
+              />
+            )}
 
           {/* Progress bar section */}
           {barProgress > 0 && (
             <div style={{ marginTop: "1.5rem" }}>
-              <div style={{ color: "#58a6ff", fontSize: "0.8rem", marginBottom: "6px" }}>
+              <div
+                style={{
+                  color: "#58a6ff",
+                  fontSize: "0.8rem",
+                  marginBottom: "6px",
+                }}
+              >
                 $ loading portfolio [{bar}] {pct}%
               </div>
               {/* Visual CSS progress bar */}
@@ -195,7 +219,14 @@ export function CliLoader({ onDone }: { onDone: () => void }) {
               </div>
 
               {barProgress === BAR_STEPS && (
-                <div style={{ color: "#39d353", fontSize: "0.8rem", marginTop: "0.75rem", animation: "fadeInLine 0.3s ease" }}>
+                <div
+                  style={{
+                    color: "#39d353",
+                    fontSize: "0.8rem",
+                    marginTop: "0.75rem",
+                    animation: "fadeInLine 0.3s ease",
+                  }}
+                >
                   ✔ All systems go. Launching experience...
                 </div>
               )}
