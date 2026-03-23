@@ -29,6 +29,15 @@ export function CliLoader({ onDone }: { onDone: () => void }) {
   const [exiting, setExiting] = useState(false);
   const done = useRef(false);
 
+  // ── Lock body scroll for the entire duration of the loader ──
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, []);
+
   useEffect(() => {
     const timers: ReturnType<typeof setTimeout>[] = [];
 

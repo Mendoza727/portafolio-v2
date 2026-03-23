@@ -17,18 +17,20 @@ import { CliLoader } from "@/components/animations/CliLoader";
 export default function HomePage() {
   const [loaded, setLoaded] = useState(false);
 
+  /* ── While loading: ONLY the loader is rendered.
+       Nothing else is mounted — no nav, no sections, no FAB.
+       Scroll is also locked inside CliLoader itself. ── */
+  if (!loaded) {
+    return <CliLoader onDone={() => setLoaded(true)} />;
+  }
+
+  /* ── After loader finishes: render the full portfolio ── */
   return (
     <GoogleReCaptchaProvider
       reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ?? ""}
       scriptProps={{ async: true, defer: true }}
     >
-      {/* CLI Splash Loader */}
-      {!loaded && <CliLoader onDone={() => setLoaded(true)} />}
-
-      {/* Sticky navigation */}
       <Navigation />
-
-      {/* Main content */}
       <HeroSection />
       <AboutSection />
       <SkillsSection />
@@ -38,8 +40,6 @@ export default function HomePage() {
       <EducationSection />
       <GithubSection />
       <ContactSection />
-
-      {/* Footer */}
       <Footer />
     </GoogleReCaptchaProvider>
   );
